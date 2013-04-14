@@ -1,0 +1,242 @@
+package utool.plugin;
+
+import java.util.UUID;
+
+import android.graphics.drawable.Drawable;
+import android.os.Parcel;
+import android.os.Parcelable;
+
+/**
+ * Data class that represents a Player. TODO a very rough placeholder at the moment with many changes subject to be made.  Feel free to change this as needed
+ * 
+ * @author Thomas
+ * @author Cory
+ *
+ * @version 10/18/2012
+ */
+public class Player implements Parcelable {
+	
+	/**
+	 * Creator object needed by Android for every parcelable class
+	 */
+	public static final Parcelable.Creator<Player> CREATOR = new Parcelable.Creator<Player>() {
+
+		public Player createFromParcel(Parcel in) {
+			return new Player(in);
+		}
+
+		public Player[] newArray(int size) {
+			return null;
+		}
+
+	};
+	
+//	/**
+//	 * Counter used to generate id's if none are provided in ctor
+//	 */
+//	private static long idCounter = 0;
+	
+	/**
+	 */
+	private UUID uuid;
+	
+	/**
+	 * The player's image
+	 */
+	private Drawable portrait;
+	
+	/**
+	 * Holds whether or not a player is a ghost. A ghost is one who wants tournament updates but
+	 * is not participating
+	 */
+	private boolean isGhost = false;
+	
+	/**
+	 * The seed of the player. -1 indicates no seed is set
+	 */
+	private int seedValue=-1;
+	
+	/**
+	 * The player's name
+	 */
+	private String name;
+	
+//	/**
+//	 * The player's id in the tournament
+//	 */
+//	private long id;
+	
+	/**
+	 * Read player data from a parcel
+	 * @param in The parcel containing player data
+	 */
+	public Player(Parcel in){
+//		id = in.readLong();
+		uuid = (UUID) in.readSerializable();
+		name = in.readString();
+	}
+	
+	/**
+	 * Create a new player from existing player data
+	 * @param uuid The player's uuid
+	 * @param name The player's name
+	 */
+	public Player(UUID uuid, String name){
+		this.uuid = uuid;
+		this.name = name;
+	}
+	
+//	public Player(long id, String name){
+//		this.id = id;
+//		this.name = name;
+//		this.uuid = UUID.randomUUID();
+//	}
+	
+	/**
+	 * Create a new player
+	 * @param name The player's name
+	 */
+	public Player(String name)
+	{
+		this.uuid = UUID.randomUUID();
+		this.name = name;
+	}
+	
+//	/**
+//	 * Create a new player
+//	 * @param id The player's id
+//	 * @param name The player's name
+//	 * @param isGhost whether or not they are participating
+//	 */
+//	public Player(long id, String name, boolean isGhost){
+//		this.id = id;
+//		this.name = name;
+//		this.isGhost = isGhost;
+//	}
+	
+	/**
+	 * Create a new player
+	 * @param id The player's id
+	 * @param name The player's name
+	 * @param isGhost whether or not they are participating
+	 * @param seedValue the seed of the player
+	 */
+	public Player(UUID id, String name, boolean isGhost, int seedValue){
+		this.uuid = id;
+		this.name = name;
+		this.isGhost = isGhost;
+		this.seedValue = seedValue;
+	}
+	
+	/**
+	 * Get the player's name
+	 * @return Player's name as a string
+	 */
+	public String getName(){
+		return name;
+	}
+	
+//	/**
+//	 * Get the player's id
+//	 * @return Player's id as a long
+//	 */
+//	public long getId(){
+//		return id;
+//	}
+	
+	/**
+	 * Get the player's number
+	 * @return Player's number as a UUID
+	 */
+	public UUID getUUID(){
+		return uuid;
+	}
+	
+//	/**
+//	 * Set the player's id
+//	 * @param n Player's id
+//	 */
+//	public void setPlayerId(long n){
+//		id = n;
+//	}
+	
+	/**
+	 * Check if the player objects are the same
+	 * @param p The player to compare against
+	 * @return True if equal, otherwise false
+	 */
+	public boolean equals(Player p){
+		
+		//Check for id and name in case id is same
+		if(p.getUUID().equals(this.uuid) && p.getName().equals(this.name)){
+			return true;
+		}else{
+			return false;
+		}
+		
+	}
+
+	public int describeContents() {
+		return 0;
+	}
+
+	public void writeToParcel(Parcel out, int flags) {
+//		out.writeLong(id);
+		out.writeSerializable(uuid);
+		out.writeString(name);
+	}
+
+	/**
+	 * Gets if the player is a ghost
+	 * @return the isGhost
+	 */
+	public boolean isGhost() {
+		return isGhost;
+	}
+
+	/**
+	 *  Sets if the player is a ghost
+	 * @param isGhost the isGhost to set
+	 */
+	public void setGhost(boolean isGhost) {
+		this.isGhost = isGhost;
+	}
+
+	/**
+	 * Setter for the seed value. -1 indicates no seed is set
+	 * @return the seedValue
+	 */
+	public int getSeedValue() {
+		return seedValue;
+	}
+
+	/**
+	 * Getter for the seed value. -1 indicates no seed is set
+	 * @param seedValue the seedValue to set
+	 */
+	public void setSeedValue(int seedValue) {
+		this.seedValue = seedValue;
+	}
+	
+	
+	@Override
+	public String toString(){
+		return name+":"+uuid;
+	}
+	
+	/**
+	 * Sets the player's portrait
+	 * @param image the image to use for the portrait
+	 */
+	public void setPortrait(Drawable image){
+		portrait = image;
+	}
+
+	/**
+	 * Retrieves the player's portrait
+	 * @return The image used as the portrait
+	 */
+	public Drawable getPortrait(){
+		return portrait;
+	}
+}

@@ -1,0 +1,10 @@
+<resources>
+	<style name="TitleBar">
+		<item name="android:background">#ffffff</item>
+    </style>
+
+    <style name="UTooLTheme" parent="@android:style/Theme.Holo">
+    	<item name="android:windowTitleSize">60dip</item>
+        <item name="android:windowTitleBackgroundStyle">@style/TitleBar</item>
+    </style>
+</resources>

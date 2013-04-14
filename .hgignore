@@ -1,0 +1,34 @@
+#Mercurial Ignore Rules for Android
+#Save as .hgignore in the repository base directory and add it to source control.
+syntax: glob
+*.class
+*.apk
+*.dex
+*.ap_
+*.suo
+.classpath
+
+UTooLTestCore/gen/utool/core/test/R.java
+
+UTooLTestCore/local.properties
+UTooL Core/local.properties
+UTooLTestCore/ant.properties
+UTooLTestSingleElimination/ant.properties
+SingleElimination/local.properties
+UTooLTestSingleElimination/local.properties
+UTooL Common/local.properties
+UTooLSwiss/local.properties
+UTooLTestSwiss/local.properties
+UTooLTestSwiss/ant.properties
+syntax: regexp
+^(.*[\\/])?gen[\\/].*
+^(.*[\\/])?bin[\\/].*
+^(.*[\\/])?obj[\\/].*
+^(.*[\\/])?log[\\/].*
+^(.*[\\/])?obf[\\/].*
+^(.*[\\/])?jars[\\/].*
+^(.*[\\/])?jar-sources[\\/].*
+^(.*[\\/])?javadoc[\\/].*
+^(.*[\\/])?\.svn[\\/].*
+^(.*[\\/])?\.metadata[\\/].*
+^(.*[\\/])?\.settings[\\/].*

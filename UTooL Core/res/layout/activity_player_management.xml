@@ -1,0 +1,57 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent" >
+
+    <!-- THIS FILE IS NO LONGER NEEDED, IT IS ONLY BEING USED BY A DEPRECATED CLASS
+    DELETE THIS FILE WHEN THE DEPRECATED CLASS IS REMOVED -->
+    
+    <TextView
+        android:id="@+id/playerManagementTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/playerManagementTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge" 
+        android:textSize="32sp"/>
+
+    <EditText
+        android:id="@+id/playerEntryEditText"
+        android:layout_width="196sp"
+        android:layout_height="64sp"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/playerManagementTitle"
+        android:ems="10"
+        android:inputType="text" />
+
+    <ImageButton
+        android:id="@+id/cameraButton"
+        android:layout_width="64sp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/playerEntryEditText"
+        android:layout_alignTop="@+id/playerEntryEditText"
+        android:layout_toRightOf="@+id/playerEntryEditText"
+        android:contentDescription="@string/cameraButtonText"
+        android:background="@drawable/ic_camera_button"
+        android:scaleType="fitCenter" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/playerEntryEditText" >
+    </ListView>
+
+    <ImageButton
+        android:id="@+id/addPlayerButton"
+        android:layout_width="64sp"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/cameraButton"
+        android:layout_alignTop="@+id/cameraButton"
+        android:layout_toRightOf="@+id/cameraButton"
+        android:background="@drawable/checkmark"
+        android:contentDescription="@string/addButtonText" />
+
+</RelativeLayout>

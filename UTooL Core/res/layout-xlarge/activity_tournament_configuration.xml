@@ -1,0 +1,177 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <TextView
+        android:id="@+id/tournamentConfigurationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/TournamentConfigurationTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FF0000"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/utool_long_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tournamentConfigurationTitle"
+        android:layout_centerHorizontal="true"
+        android:text="@string/utool_long"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#595959" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/utool_long_title"
+        android:progress="100" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/progressBar1"
+        android:gravity="center"
+        android:paddingBottom="7dp"
+        android:paddingTop="7dp"
+        android:text="@string/tournamentNameLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium"
+        android:textSize="40sp" />
+
+    <EditText
+        android:id="@+id/nameTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progressBar1"
+        android:layout_toRightOf="@+id/nameTextView"
+        android:ems="10"
+        android:textSize="40sp"
+        android:hint="@string/tournamentNameHint"
+        android:inputType="textPersonName" />
+
+    <ProgressBar
+        android:id="@+id/progressBar2"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/nameTextField"
+        android:progress="100" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="180dp"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/save"
+        android:textSize="40sp" />
+
+    <Spinner
+        android:id="@+id/pluginSelectionSpinner"
+        android:layout_width="wrap_content"
+        android:layout_height="60dp"
+        android:textSize="40sp"
+        android:layout_above="@+id/saveButton"
+        android:layout_alignLeft="@+id/tournamentConfigurationTitle"
+        android:layout_alignParentRight="true" />
+
+    <ProgressBar
+        android:id="@+id/progressBar3"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_above="@+id/pluginSelectionSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:progress="100" />
+
+    <ImageButton
+        android:id="@+id/addButton"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_above="@+id/pluginSelectionSpinner"
+        android:layout_alignParentRight="true"
+        android:contentDescription="@string/addButtonText"
+        android:src="@android:drawable/ic_input_add" />
+
+    <ImageButton
+        android:id="@+id/cameraButton"
+        android:layout_width="64dp"
+        android:layout_height="60dp"
+        android:layout_marginTop="5dp"
+        android:layout_above="@+id/pluginSelectionSpinner"
+        android:layout_toLeftOf="@+id/addButton"
+        android:contentDescription="@string/cameraButton"
+        android:src="@android:drawable/ic_menu_camera" />
+
+    <ImageView
+        android:id="@+id/playerPortrait"
+        android:layout_width="60dp"
+        android:layout_height="60dp"
+        android:layout_above="@+id/progressBar3"
+        android:layout_alignTop="@+id/cameraButton"
+        android:layout_marginTop="5dp"
+        android:layout_toLeftOf="@+id/cameraButton"
+        android:contentDescription="@string/playerPortrait"
+        android:src="@drawable/silhouette" />
+
+    <EditText
+        android:id="@+id/playerNameField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/playerPortrait"
+        android:layout_alignParentLeft="true"
+        android:layout_toLeftOf="@+id/playerPortrait"
+        android:ems="10"
+        android:textSize="40sp"
+        android:hint="@string/playerNameHint"
+        android:inputType="textPersonName" />
+
+    <ProgressBar
+        android:id="@+id/progressBar4"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_above="@+id/playerPortrait"
+        android:layout_alignParentLeft="true"
+        android:layout_marginBottom="5dp"
+        android:layout_alignParentRight="true"
+        android:progress="100" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_above="@+id/progressBar4"
+        android:layout_below="@+id/progressBar2" >
+    </ListView>
+
+    <TextView
+        android:id="@+id/tournamentTypeLabel"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/pluginSelectionSpinner"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/playerNameField"
+        android:layout_toLeftOf="@+id/pluginSelectionSpinner"
+        android:gravity="center"
+        android:paddingBottom="7dp"
+        android:textSize="40sp"
+        android:paddingTop="7dp"
+        android:text="@string/tournamentTypeLabel"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+</RelativeLayout>

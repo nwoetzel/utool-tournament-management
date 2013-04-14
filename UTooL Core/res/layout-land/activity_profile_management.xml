@@ -1,0 +1,145 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <TextView
+        android:id="@+id/profileManagementTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/profileManagementTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FF0000"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/utool_long_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/profileManagementTitle"
+        android:layout_centerHorizontal="true"
+        android:text="@string/utool_long"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#595959" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/utool_long_title"
+        android:progress="100" />
+
+    <TextView
+        android:id="@+id/textView1"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/progressBar1"
+        android:layout_centerHorizontal="true"
+        android:text="" />
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/nameTextField"
+        android:layout_below="@+id/progressBar1"
+        android:layout_toRightOf="@+id/textView1"
+        android:text="@string/nameEntry"
+        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <EditText
+        android:id="@+id/nameTextField"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progressBar1"
+        android:layout_toRightOf="@+id/nameTextView"
+        android:ems="10"
+        android:inputType="textPersonName" />
+
+    <TextView
+        android:id="@+id/portraitTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_toRightOf="@+id/textView1"
+        android:layout_alignTop="@+id/portraitImageView"
+        android:paddingBottom="12sp"
+        android:paddingTop="12sp"
+        android:text="@string/portraitEntry"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
+
+    <ImageView
+        android:id="@+id/portraitImageView"
+        android:layout_width="48dp"
+        android:layout_height="48dp"
+        android:layout_below="@+id/nameTextField"
+        android:layout_toRightOf="@+id/portraitTextView"
+        android:contentDescription="@string/profilePortrait"
+        android:src="@drawable/silhouette" />
+
+    <ImageButton
+        android:id="@+id/cameraButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignTop="@+id/portraitImageView"
+        android:layout_toRightOf="@+id/portraitImageView"
+        android:contentDescription="@string/profilePortrait"
+        android:src="@android:drawable/ic_menu_camera" />
+
+    <ImageButton
+        android:id="@+id/galleryButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/nameTextField"
+        android:layout_toRightOf="@+id/cameraButton"
+        android:contentDescription="@string/profilePortrait"
+        android:src="@android:drawable/ic_menu_gallery" />
+
+    <Button
+        android:id="@+id/saveButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/portraitTextView"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/galleryButton"
+        android:text="@string/save" />
+
+    <TextView
+        android:id="@+id/profile_creation_help_text"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignLeft="@+id/saveButton"
+        android:layout_alignParentBottom="true"
+        android:layout_below="@+id/saveButton"
+        android:background="#000000"
+        android:gravity="center"
+        android:text="@string/profile_creation_help"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textSize="12sp" />
+
+    <ImageView
+        android:id="@+id/fakeprogressBar"
+        android:layout_width="2dp"
+        android:layout_height="match_parent"
+        android:layout_alignTop="@+id/textView1"
+        android:layout_toLeftOf="@+id/nameTextView"
+        android:background="@drawable/vertdiv" />
+
+    <ListView
+        android:id="@+id/listView1"
+        android:layout_width="fill_parent"
+        android:layout_height="fill_parent"
+        android:layout_alignParentLeft="true"
+        android:layout_alignTop="@+id/fakeprogressBar"
+        android:layout_toLeftOf="@+id/fakeprogressBar" >
+
+    </ListView>
+
+</RelativeLayout>

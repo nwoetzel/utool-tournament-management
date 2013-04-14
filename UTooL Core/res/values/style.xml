@@ -1,0 +1,6 @@
+<resources>
+    <style name="UTooLTheme" parent="android:Theme">
+    	<item name="android:windowTitleSize">60dip</item>
+        <item name="android:windowTitleBackgroundStyle">@style/TitleBar</item>
+    </style>
+</resources>

@@ -1,0 +1,7 @@
+<?xml version="1.0" encoding="utf-8"?>
+<menu xmlns:android="http://schemas.android.com/apk/res/android" >
+    <item android:id="@+id/Clear" android:title="Clear"></item>
+    <item android:id="@+id/Profiles" android:title="Profiles"></item>
+    <item android:id="@+id/Help" android:title="Help"></item>
+
+</menu>

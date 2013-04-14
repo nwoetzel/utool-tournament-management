@@ -1,0 +1,6 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android">
+    <item android:id="@+id/menu_direct_connect" android:title="@string/menu_direct_connect"></item><item android:id="@+id/menu_profiles" android:title="@string/menu_profiles"></item>
+    
+    <item android:id="@+id/menu_help" android:title="@string/menu_help"></item>
+    
+</menu>

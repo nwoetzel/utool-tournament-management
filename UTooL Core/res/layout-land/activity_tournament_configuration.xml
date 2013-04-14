@@ -1,0 +1,197 @@
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:background="#000000" >
+
+    <TextView
+        android:id="@+id/tournamentConfigurationTitle"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentTop="true"
+        android:layout_centerHorizontal="true"
+        android:text="@string/TournamentConfigurationTitle"
+        android:textAppearance="?android:attr/textAppearanceLarge"
+        android:textColor="#FF0000"
+        android:textSize="32sp" />
+
+    <TextView
+        android:id="@+id/utool_long_title"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_below="@+id/tournamentConfigurationTitle"
+        android:layout_centerHorizontal="true"
+        android:text="@string/utool_long"
+        android:textAppearance="?android:attr/textAppearanceSmall"
+        android:textColor="#595959" />
+
+    <ProgressBar
+        android:id="@+id/progressBar1"
+        style="?android:attr/progressBarStyleHorizontal"
+        android:layout_width="wrap_content"
+        android:layout_height="2sp"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/utool_long_title"
+        android:progress="100" />
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentBottom="true"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progressBar1" >
+
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.50" >
+
+            <TextView
+                android:id="@+id/nameTextView"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true"
+                android:gravity="center"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:text="@string/tournamentNameLabel"
+                android:textAppearance="?android:attr/textAppearanceMedium"
+                android:textSize="15sp" />
+
+            <EditText
+                android:id="@+id/nameTextField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentRight="true"
+                android:layout_alignParentTop="true"
+                android:layout_toRightOf="@+id/nameTextView"
+                android:ems="10"
+                android:hint="@string/tournamentNameHint"
+                android:inputType="textPersonName"
+                android:textSize="15sp" >
+
+                <requestFocus />
+            </EditText>
+
+            <ProgressBar
+                android:id="@+id/progressBar3"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="2sp"
+                android:layout_alignBottom="@+id/nameTextView"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:progress="100" />
+
+            <ImageButton
+                android:id="@+id/addButton"
+                android:layout_width="40dp"
+                android:layout_height="40dp"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/progressBar3"
+                android:layout_marginTop="15dp"
+                android:contentDescription="@string/addButtonText"
+                android:src="@android:drawable/ic_input_add" />
+
+            <ImageButton
+                android:id="@+id/cameraButton"
+                android:layout_width="42dp"
+                android:layout_height="40dp"
+                android:layout_alignTop="@+id/addButton"
+                android:layout_toLeftOf="@+id/addButton"
+                android:contentDescription="@string/cameraButton"
+                android:src="@android:drawable/ic_menu_camera" />
+
+            <ImageView
+                android:id="@+id/playerPortrait"
+                android:layout_width="38dp"
+                android:layout_height="38dp"
+                android:layout_alignBottom="@+id/cameraButton"
+                android:layout_toLeftOf="@+id/cameraButton"
+                android:contentDescription="@string/playerPortrait"
+                android:src="@drawable/silhouette" />
+
+            <EditText
+                android:id="@+id/playerNameField"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignBottom="@+id/playerPortrait"
+                android:layout_toLeftOf="@+id/playerPortrait"
+                android:ems="10"
+                android:hint="@string/playerNameHint"
+                android:inputType="textPersonName"
+                android:textSize="15sp" />
+
+            <ProgressBar
+                android:id="@+id/ProgressBar01"
+                style="?android:attr/progressBarStyleHorizontal"
+                android:layout_width="wrap_content"
+                android:layout_height="2sp"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/addButton"
+                android:progress="100" />
+
+            <TextView
+                android:id="@+id/tournamentTypeLabel"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_below="@+id/ProgressBar01"
+                android:layout_marginTop="24dp"
+                android:gravity="center"
+                android:paddingBottom="7dp"
+                android:paddingTop="7dp"
+                android:text="@string/tournamentTypeLabel"
+                android:textAppearance="?android:attr/textAppearanceMedium" />
+
+
+
+            <Spinner
+                android:id="@+id/pluginSelectionSpinner"
+                android:layout_width="wrap_content"
+                android:layout_height="48sp"
+                android:layout_alignBottom="@+id/tournamentTypeLabel"
+                android:layout_alignParentRight="true"
+                android:layout_alignTop="@+id/tournamentTypeLabel"
+                android:layout_toRightOf="@+id/tournamentTypeLabel" />
+
+
+            <Button
+                android:id="@+id/saveButton"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentRight="true"
+                android:layout_below="@+id/tournamentTypeLabel"
+                android:text="@string/save" />
+
+        </RelativeLayout>
+
+        <ImageView
+            android:id="@+id/imageView1"
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.005"
+            android:background="@drawable/vertdiv" />
+
+        <RelativeLayout
+            android:layout_width="0dp"
+            android:layout_height="match_parent"
+            android:layout_weight="0.495" >
+
+            <ListView
+                android:id="@+id/listView1"
+                android:layout_width="fill_parent"
+                android:layout_height="fill_parent"
+                android:layout_alignParentLeft="true"
+                android:layout_alignParentTop="true" >
+            </ListView>
+        </RelativeLayout>
+    </LinearLayout>
+
+</RelativeLayout>
