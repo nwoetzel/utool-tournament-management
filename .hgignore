@@ -13,13 +13,7 @@ UTooLTestCore/gen/utool/core/test/R.java
 UTooLTestCore/local.properties
 UTooL Core/local.properties
 UTooLTestCore/ant.properties
-UTooLTestSingleElimination/ant.properties
-SingleElimination/local.properties
-UTooLTestSingleElimination/local.properties
 UTooL Common/local.properties
-UTooLSwiss/local.properties
-UTooLTestSwiss/local.properties
-UTooLTestSwiss/ant.properties
 syntax: regexp
 ^(.*[\\/])?gen[\\/].*
 ^(.*[\\/])?bin[\\/].*
