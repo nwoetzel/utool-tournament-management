@@ -21,7 +21,9 @@ import utool.networking.packet.HostInformation;
 import utool.networking.packet.IXmlMessage;
 import utool.networking.packet.PlayerMessage;
 import utool.networking.packet.PluginStartMessage;
+import utool.networking.packet.PluginTerminationMessage;
 import utool.plugin.Player;
+import utool.plugin.activity.PluginCommonActivityHelper;
 
 /**
  * Abstract wrapper class for socket management
@@ -267,6 +269,13 @@ public abstract class SocketWrapper {
 				boolean putData = true;
 				try {
 					message = new String(data, "UTF-8");
+					
+					//Do not allow core plugin termination messages over the network
+					if (PluginTerminationMessage.isPluginTerminationMessage(message)){
+						putData = false;
+						return;
+					}
+					
 					//Process HostInformation messages
 					IXmlMessage.DecodedMessageContainer<HostInformation> hostInfo = HostInformation.isHostInformationMessage(message);
 					if (hostInfo.isOfMessageType() && isClient){
@@ -310,6 +319,7 @@ public abstract class SocketWrapper {
 					if (tournamentCore.getPluginStartMessage() == null){
 						try {
 							PluginStartMessage psm = new PluginStartMessage(message);
+							Log.d(LOG_TAG, "PluginStartMessage received");
 							tournamentCore.setPluginStartMessage(psm);
 						} catch (XmlMessageTypeException e) {
 							//do nothing
@@ -423,7 +433,7 @@ public abstract class SocketWrapper {
 				}
 				if (isClient){
 					try {
-						receivedData.put("-1".getBytes());
+						receivedData.put(PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE.getBytes());
 					} catch (InterruptedException e1) {
 					}
 				}

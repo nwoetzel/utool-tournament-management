@@ -9,7 +9,7 @@
         android:id="@+id/playerName"
         android:layout_width="0dp"
         android:layout_height="36sp"
-        android:layout_weight="0.625"
+        android:layout_weight="0.5"
         android:contentDescription="@string/profileName"
         android:longClickable="true"
         android:singleLine="true"
@@ -26,6 +26,13 @@
         android:gravity="center"
         android:src="@android:drawable/ic_menu_camera"
         android:longClickable="true" />
+    
+    <ImageButton
+        android:id="@+id/galleryButton"
+        android:layout_width="0dp"
+        android:layout_height="36sp"
+        android:layout_weight="0.125"
+        android:src="@android:drawable/ic_menu_gallery" />
 
     <ImageView
         android:id="@+id/playerPortrait"

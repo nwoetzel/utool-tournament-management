@@ -47,7 +47,7 @@ public class SavablePlayer extends Player implements Savable{
 	public String save() {
 		String ret = "";
 		ret += uuid.toString()+"\n";
-		ret += name+"\n";
+		ret += "=="+name+"==\n";
 		ret += isGhost+"\n";
 		ret += seedValue+"\n";
 		ret += portraitFilepath;
@@ -59,6 +59,7 @@ public class SavablePlayer extends Player implements Savable{
 		StringTokenizer token = new StringTokenizer(value, "\n");
 		UUID id = UUID.fromString(token.nextToken());
 		String n = token.nextToken();
+		n = n.substring(2, n.length()-2);
 		String ghost = token.nextToken();
 		boolean bGhost = false;
 		if (ghost.equalsIgnoreCase("true")){

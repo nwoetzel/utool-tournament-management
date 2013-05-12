@@ -72,6 +72,11 @@ public class PlayerMessage implements IXmlMessage {
 	private MessageType messageType;
 	
 	/**
+	 * The raw portrait data
+	 */
+	private byte[] portraitData;
+	
+	/**
 	 * Read a received PlayerRegisterMessage
 	 * @param message The XML string of the message
 	 * @throws XmlMessageTypeException On invalid message type
@@ -103,6 +108,15 @@ public class PlayerMessage implements IXmlMessage {
 	 */
 	public MessageType getMessageType(){
 		return messageType;
+	}
+	
+	/**
+	 * Get the raw portrait data.
+	 * This method is only valid for received messages.
+	 * @return Byte array containing image data. This will be null if no image data was received.
+	 */
+	public byte[] getPortraitData(){
+		return portraitData;
 	}
 
 	/**
@@ -241,8 +255,8 @@ public class PlayerMessage implements IXmlMessage {
 							}
 						}
 					} else if (name != null && name.equalsIgnoreCase(PICTURE_TAG)){
-						byte[] image = Base64.decode(parser.nextText(), Base64.DEFAULT);
-						playerPicture = BitmapFactory.decodeByteArray(image, 0, image.length);
+						portraitData = Base64.decode(parser.nextText(), Base64.DEFAULT);
+						playerPicture = BitmapFactory.decodeByteArray(portraitData, 0, portraitData.length);
 					}
 				} else if (parser.getEventType() == XmlPullParser.END_TAG){
 					if (name.equalsIgnoreCase(PLAYER_TAG)){

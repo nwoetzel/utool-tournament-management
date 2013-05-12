@@ -43,81 +43,75 @@
         android:layout_centerHorizontal="true"
         android:text="" />
 
-    <TextView
-        android:id="@+id/nameTextView"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/nameTextField"
-        android:layout_below="@+id/progressBar1"
-        android:layout_toRightOf="@+id/textView1"
-        android:text="@string/nameEntry"
-        android:gravity="center"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
     <EditText
         android:id="@+id/nameTextField"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignParentRight="true"
         android:layout_below="@+id/progressBar1"
+        android:layout_toLeftOf="@+id/listView1"
         android:layout_toRightOf="@+id/nameTextView"
         android:ems="10"
         android:inputType="textPersonName" />
 
-    <TextView
-        android:id="@+id/portraitTextView"
-        android:layout_width="wrap_content"
+    <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_toRightOf="@+id/textView1"
-        android:layout_alignTop="@+id/portraitImageView"
-        android:paddingBottom="12sp"
-        android:paddingTop="12sp"
-        android:text="@string/portraitEntry"
-        android:textAppearance="?android:attr/textAppearanceLarge" />
-
-    <ImageView
-        android:id="@+id/portraitImageView"
-        android:layout_width="48dp"
-        android:layout_height="48dp"
+        android:layout_alignParentLeft="true"
         android:layout_below="@+id/nameTextField"
-        android:layout_toRightOf="@+id/portraitTextView"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@drawable/silhouette" />
+        android:layout_toLeftOf="@+id/fakeprogressBar"
+        android:padding="4dp" >
 
-    <ImageButton
-        android:id="@+id/cameraButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignTop="@+id/portraitImageView"
-        android:layout_toRightOf="@+id/portraitImageView"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@android:drawable/ic_menu_camera" />
+        <TextView
+            android:id="@+id/portraitTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:gravity="center"
+            android:text="@string/portraitEntry"
+            android:textAppearance="?android:attr/textAppearanceLarge" />
 
-    <ImageButton
-        android:id="@+id/galleryButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_below="@+id/nameTextField"
-        android:layout_toRightOf="@+id/cameraButton"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@android:drawable/ic_menu_gallery" />
+        <ImageView
+            android:id="@+id/portraitImageView"
+            android:layout_width="48dp"
+            android:layout_height="fill_parent"
+            android:paddingBottom="5dp"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@drawable/silhouette" />
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@android:drawable/ic_menu_camera" />
+
+        <ImageButton
+            android:id="@+id/galleryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@android:drawable/ic_menu_gallery" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveButton"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/portraitTextView"
-        android:layout_alignParentRight="true"
-        android:layout_below="@+id/galleryButton"
+        android:layout_alignLeft="@+id/linearLayout2"
+        android:layout_alignRight="@+id/linearLayout2"
+        android:layout_below="@+id/linearLayout2"
         android:text="@string/save" />
 
     <TextView
         android:id="@+id/profile_creation_help_text"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_alignLeft="@+id/saveButton"
+        android:layout_alignLeft="@+id/linearLayout2"
         android:layout_alignParentBottom="true"
+        android:layout_alignRight="@+id/linearLayout2"
         android:layout_below="@+id/saveButton"
+        android:layout_toRightOf="@+id/fakeprogressBar"
         android:background="#000000"
         android:gravity="center"
         android:text="@string/profile_creation_help"
@@ -128,18 +122,30 @@
         android:id="@+id/fakeprogressBar"
         android:layout_width="2dp"
         android:layout_height="match_parent"
-        android:layout_alignTop="@+id/textView1"
-        android:layout_toLeftOf="@+id/nameTextView"
-        android:background="@drawable/vertdiv" />
+        android:layout_centerHorizontal="true"
+        android:layout_below="@+id/progressBar1"
+        android:background="@drawable/vertdiv"
+        android:contentDescription="@string/app_name" />
 
     <ListView
         android:id="@+id/listView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-        android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/fakeprogressBar"
-        android:layout_toLeftOf="@+id/fakeprogressBar" >
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/progressBar1"
+        android:layout_toRightOf="@+id/fakeprogressBar" >
 
     </ListView>
+
+    <TextView
+        android:id="@+id/nameTextView"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBottom="@+id/nameTextField"
+        android:layout_alignParentLeft="true"
+        android:layout_below="@+id/utool_long_title"
+        android:gravity="center"
+        android:text="@string/nameEntry"
+        android:textAppearance="?android:attr/textAppearanceLarge" />
 
 </RelativeLayout>

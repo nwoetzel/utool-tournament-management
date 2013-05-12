@@ -39,11 +39,11 @@
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/portraitTextView"
+        android:layout_above="@+id/linearLayout2"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/progressBar1"
-        android:text="@string/nameEntry"
         android:gravity="center"
+        android:text="@string/nameEntry"
         android:textAppearance="?android:attr/textAppearanceLarge"
         android:textSize="40sp" />
 
@@ -58,46 +58,46 @@
         android:ems="10"
         android:inputType="textPersonName" />
 
-    <TextView
-        android:id="@+id/portraitTextView"
-        android:layout_width="wrap_content"
+     <LinearLayout
+        android:id="@+id/linearLayout2"
+        android:layout_width="fill_parent"
         android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/portraitImageView"
         android:layout_alignParentLeft="true"
-        android:layout_alignTop="@+id/portraitImageView"
-        android:gravity="center"
-        android:text="@string/portraitEntry"
-        android:textAppearance="?android:attr/textAppearanceLarge"
-        android:textSize="40sp" />
-
-    <ImageView
-        android:id="@+id/portraitImageView"
-        android:layout_width="60dp"
-        android:layout_height="60dp"
         android:layout_below="@+id/nameTextField"
-        android:layout_toRightOf="@+id/portraitTextView"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@drawable/silhouette" />
+        android:padding="4dp" >
 
-    <ImageButton
-        android:id="@+id/cameraButton"
-        android:layout_width="53dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/saveButton"
-        android:layout_alignTop="@+id/portraitImageView"
-        android:layout_toRightOf="@+id/portraitImageView"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@android:drawable/ic_menu_camera" />
+        <TextView
+            android:id="@+id/portraitTextView"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:gravity="center"
+            android:text="@string/portraitEntry"
+            android:textAppearance="?android:attr/textAppearanceLarge"
+            android:textSize="40sp" />
 
-    <ImageButton
-        android:id="@+id/galleryButton"
-        android:layout_width="50dp"
-        android:layout_height="50dp"
-        android:layout_above="@+id/saveButton"
-        android:layout_below="@+id/nameTextField"
-        android:layout_toRightOf="@+id/cameraButton"
-        android:contentDescription="@string/profilePortrait"
-        android:src="@android:drawable/ic_menu_gallery" />
+        <ImageView
+            android:id="@+id/portraitImageView"
+            android:layout_width="48dp"
+            android:layout_height="fill_parent"
+            android:paddingBottom="5dp"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@drawable/silhouette" />
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="wrap_content"
+            android:layout_height="fill_parent"
+            android:layout_gravity="center"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@android:drawable/ic_menu_camera" />
+
+        <ImageButton
+            android:id="@+id/galleryButton"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:contentDescription="@string/profilePortrait"
+            android:src="@android:drawable/ic_menu_gallery" />
+    </LinearLayout>
 
     <Button
         android:id="@+id/saveButton"
@@ -106,7 +106,7 @@
         android:layout_alignParentLeft="true"
         android:textSize="40sp"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/portraitImageView"
+        android:layout_below="@+id/linearLayout2"
         android:text="@string/save" />
 
     <ProgressBar
@@ -123,7 +123,7 @@
         android:id="@+id/listView1"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_below="@+id/progressBar2"
+        android:layout_below="@+id/saveButton"
         android:layout_centerHorizontal="true" >
     </ListView>
 

@@ -1,6 +1,7 @@
 package utool.plugin.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import utool.plugin.IUTooLCore;
@@ -31,49 +32,19 @@ public abstract class AbstractPluginMainActivity extends AbstractPluginCommonAct
 	protected PluginMainActivityHelper pluginHelper;
 	
 	/**
-	 * The tournament's name
-	 */
-	@Deprecated
-	String tournamentName = null;
-	
-	/**
 	 * Get the tournament's name
 	 * @return Tournament's name
 	 */
-	@Deprecated
 	public String getTournamentName(){
-		return tournamentName;
+		return pluginHelper.getTournamentName();
 	}
-	
-	/**
-	 * Set the tournament's name
-	 * @param tournamentName Tournament's name
-	 */
-	public void setTournamentName(String tournamentName){
-		this.tournamentName = tournamentName;
-	}
-	
-	/**
-	 * The player list received from the core
-	 */
-	@Deprecated
-	ArrayList<Player> playerList;
 	
 	/**
 	 * Get the player list
 	 * @return Player list
 	 */
-	@Deprecated
-	public ArrayList<Player> getPlayerList(){
-		return playerList;
-	}
-	
-	/**
-	 * Set the player list
-	 * @param playerList Player list
-	 */
-	public void setPlayerList(ArrayList<Player> playerList){
-		this.playerList = playerList;
+	public List<Player> getPlayerList(){
+		return pluginHelper.getPlayerList();
 	}
 	
 	/**
@@ -87,47 +58,29 @@ public abstract class AbstractPluginMainActivity extends AbstractPluginCommonAct
 	 */
 	public int getPermissionLevel()
 	{
-		return permissionLevel;
+		return pluginHelper.getPermissionLevel();
 	}
-	
-	/**
-	 * False if this plugin is being resumed
-	 */
-	private boolean isNewInstance = true;
 	
 	/**
 	 * Get whether this plugin instance is being newly started or resumed.
 	 * @return True if this is a new instance.
 	 */
 	public boolean isNewInstance(){
-		return isNewInstance;
+		return pluginHelper.isNewInstance();
 	}
-	
-	/**
-	 * The player's unique id
-	 */
-	UUID pid = null;
 	
 	/**
 	 * Get the player's UUID
 	 * @return Player's id
 	 */
 	public UUID getPid(){
-		return pid;
+		return pluginHelper.getPid();
 	}
 	
 	@Override
 	protected void onCreate(Bundle savedInstanceState) {
 		super.onCreate(savedInstanceState);
 		pluginHelper = new PluginMainActivityHelper(this, this);
-		
-		//Get extras passed from the core
-		tournamentName = getIntent().getExtras().getString("tournamentName");
-		playerList = getIntent().getExtras().getParcelableArrayList("playerList");
-		permissionLevel = getIntent().getExtras().getInt("permissionLevel");
-		pid = UUID.fromString(getIntent().getExtras().getString("pid"));
-		isNewInstance = getIntent().getExtras().getBoolean("isNewInstance", false);
-
 	}
 	
 	@Override
@@ -148,15 +101,6 @@ public abstract class AbstractPluginMainActivity extends AbstractPluginCommonAct
 	 * Code to run if the service unexpectedly disconnects
 	 */
 	public abstract void runOnServiceDisconnected();
-	
-	/**
-	 * Get the tournament name. The host will append the tournament id, clients will take what the host gives them.
-	 * @param includeIdIfHost Include the tournament id if this is a host device
-	 * @return The tournament name, maybe with :id appended
-	 */
-	public String getTournamentName(boolean includeIdIfHost){
-			return tournamentName;
-	}
 	
 	/**
 	 * This is to be called when there is a message to send to the core

@@ -35,16 +35,15 @@ public class ConnectAsActivity extends Activity {
 	@Override
     public void onCreate(Bundle savedInstanceState) {
         super.onCreate(savedInstanceState);
-
-        //Custom title bar code needs to go around setContentView to work
-        if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
-        	requestWindowFeature(Window.FEATURE_CUSTOM_TITLE);
-        	setContentView(R.layout.activity_connect_as);
-        	getWindow().setFeatureInt(Window.FEATURE_CUSTOM_TITLE, R.layout.window_title);
-        } else {
+        
+        //add action bar if honeycomb or higher
+        if(Build.VERSION.SDK_INT >= Build.VERSION_CODES.HONEYCOMB){
         	setContentView(R.layout.activity_connect_as);
         	getActionBar().setDisplayShowHomeEnabled(false);
         	getActionBar().setDisplayShowTitleEnabled(false);
+        } else {
+        	this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+        	setContentView(R.layout.activity_connect_as);
         }
 
         //get player list data
@@ -60,7 +59,9 @@ public class ConnectAsActivity extends Activity {
 			public void onItemClick(AdapterView<?> parent, View view, int position, long id) {
 				//Return selected player to calling activity
 				Intent i = new Intent();
-				i.putExtra("connectAsPlayer", playerList.get((int) id));
+				Player connectAsPlayer = playerList.get((int) id);
+				connectAsPlayer.setPermissionsLevel(Player.PARTICIPANT);
+				i.putExtra("connectAsPlayer", connectAsPlayer);
 				setResult(RESULT_OK, i);
 				finish();
 			}

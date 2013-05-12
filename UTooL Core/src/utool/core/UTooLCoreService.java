@@ -11,8 +11,14 @@ import utool.networking.ClientManager;
 import utool.networking.ServerManager;
 import utool.networking.SocketWrapper;
 import utool.networking.packet.PlayerMessage;
+import utool.persistence.SavableConfigurationList;
+import utool.persistence.SavablePlayer;
+import utool.persistence.SavablePlayerList;
+import utool.persistence.StorageManager;
+import utool.persistence.TournamentConfiguration;
 import utool.plugin.IUTooLCore;
 import utool.plugin.Player;
+import utool.plugin.activity.PluginCommonActivityHelper;
 import utool.remoteexceptions.ConnectionFailedRemoteException;
 import android.app.Service;
 import android.content.Intent;
@@ -67,6 +73,11 @@ public class UTooLCoreService extends Service
 		}
 	}
 	
+	/**
+	 * Get the UTooL Service instance for a tournament
+	 * @param tournamentId The tournament id
+	 * @return The UTooL Service instance
+	 */
 	public static UTooLServiceImplementation getServiceForTournamentInstance(long tournamentId){
 		return (UTooLServiceImplementation)serviceManagers.get(tournamentId);
 	}
@@ -241,8 +252,8 @@ public class UTooLCoreService extends Service
 
 		/**
 		 * Receive messages from the socket(s).
-		 * On error, a string of value "-1" is returned.
-		 * @return Message string or "-1"
+		 * On error, a string of value PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE is returned.
+		 * @return Message string or PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE
 		 */
 		public String receive() throws RemoteException
 		{
@@ -255,8 +266,11 @@ public class UTooLCoreService extends Service
 					data = serverManager.receive();
 				}
 				message = new String(data, "UTF-8");
+				if (message.equals(PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE)){
+					tournamentCore.shutdownCore();
+				}
 			} catch (Exception e){
-				message = "-1";
+				message = PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE;
 				tournamentCore.shutdownCore();
 			}
 			return message;
@@ -318,6 +332,31 @@ public class UTooLCoreService extends Service
 		 */
 		public boolean playerListUpdated() throws RemoteException {
 			return this.tournamentCore.getPlayerListUpdated();
+		}
+
+		/**
+		 * Get the tournament's name
+		 */
+		public String getTournamentName() throws RemoteException {
+			return this.tournamentCore.getTournamentName();
+		}
+		
+		/**
+		 * Internal core method to save player configuration data for this tournament
+		 * @param players The players to save
+		 * @throws InstantiationException Thrown if the expected class cannot be instantiated
+		 * @throws IllegalAccessException Thrown if the expected class has restricted access
+		 */
+		public void savePlayerConfigurationList(List<Player> players) throws InstantiationException, IllegalAccessException{
+			TournamentConfiguration configuration;
+			SavableConfigurationList configurationList = (SavableConfigurationList) StorageManager.loadSavable("ConfigurationList", SavableConfigurationList.class, UTooLCoreService.this, null);
+			configuration = configurationList.get(tournamentCore.getConfigIndex());			
+			SavablePlayerList savablePlayers = new SavablePlayerList();
+			for (Player p : players){
+				savablePlayers.add(new SavablePlayer(p));
+			}
+			configuration.setPlayers(savablePlayers);
+			StorageManager.saveSavable("ConfigurationList", configurationList, UTooLCoreService.this);
 		}
 	}
 }

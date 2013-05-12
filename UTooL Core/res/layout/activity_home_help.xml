@@ -24,7 +24,7 @@
                     android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:text="Welcome to UTooL. Use the New Tournament button at the top of the home screen to create new tournaments. Click on listed tournaments to join or resume. Press and hold listed tournaments for more options. If you're ever lost, try the menu button."
+                    android:text="Welcome to UTooL. Use the New Tournament button at the top of the home screen to create new tournaments. Click on listed tournaments to join or resume. Press and hold listed tournaments for more options. If you're ever lost, try the Menu button, then try Help."
                     android:textAppearance="?android:attr/textAppearanceSmall" />
         </LinearLayout>
 

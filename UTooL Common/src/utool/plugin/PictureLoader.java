@@ -63,10 +63,10 @@ public class PictureLoader {
 			
 		}
 
-		if (bm != null){
+		if (bm != null && bm != rotated){
 			bm.recycle();
 		}
-		if (scaled != null){
+		if (scaled != null && scaled != rotated){
 			scaled.recycle();
 		}
 

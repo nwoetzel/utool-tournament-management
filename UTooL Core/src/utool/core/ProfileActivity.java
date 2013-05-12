@@ -225,7 +225,7 @@ public class ProfileActivity extends FragmentActivity{
 					}
 
 					if (createOnSave){
-						Intent i = new Intent(getApplicationContext(), HomeActivity.class);
+						Intent i = new Intent(ProfileActivity.this, HomeActivity.class);
 						startActivity(i);
 					}
 
@@ -693,7 +693,7 @@ public class ProfileActivity extends FragmentActivity{
 				task.execute(profiles.get(position));
 			} else {
 				Bitmap bm = profiles.get(position).getPortrait();
-				if (bm != null){
+				if (bm != null && !bm.isRecycled()){
 					portrait.setImageBitmap(bm);
 				} else {
 					portrait.setImageResource(R.drawable.silhouette);
@@ -811,7 +811,7 @@ public class ProfileActivity extends FragmentActivity{
 	 * @param text The text to display
 	 */
 	private void showError(String text){
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 	}
 
 	/**

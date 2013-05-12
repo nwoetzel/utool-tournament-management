@@ -34,7 +34,7 @@ import java.util.Properties;
 				GMailSender sender = new GMailSender("emailaddress@gmail.com", "password");
 				String subject = "This is the Subject";
 				String body = "This is the email body";
-				String senderEmail = "msoetablet@gmail.com";
+				String senderEmail = "emailaddress@gmail.com";
 				sender.sendMail(subject, body, , urls[0]);   
 				Log.d("email", "sent");
 			} catch (Exception e) {   

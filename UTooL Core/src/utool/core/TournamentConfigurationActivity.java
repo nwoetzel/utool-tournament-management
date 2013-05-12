@@ -4,7 +4,6 @@ import java.io.File;
 import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
-
 import utool.core.AbstractTournament.TournamentLocationEnum;
 import utool.persistence.Profile;
 import utool.persistence.SavableConfigurationList;
@@ -20,15 +19,16 @@ import android.annotation.SuppressLint;
 import android.app.Activity;
 import android.app.AlertDialog;
 import android.app.Dialog;
-import android.content.Context;
 import android.content.DialogInterface;
 import android.content.Intent;
 import android.content.pm.PackageManager;
 import android.content.pm.ResolveInfo;
+import android.database.Cursor;
 import android.graphics.Bitmap;
 import android.graphics.Color;
 import android.graphics.drawable.BitmapDrawable;
 import android.net.Uri;
+import android.os.Build;
 import android.os.Bundle;
 import android.os.Environment;
 import android.provider.MediaStore;
@@ -67,6 +67,7 @@ import android.widget.Toast;
  * @author kreierj
  * @version 1/3/2013
  */
+@SuppressLint("NewApi")
 public class TournamentConfigurationActivity extends FragmentActivity{
 
 	/**
@@ -92,9 +93,19 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 	private static final int CAMERA_REQUEST_CODE = 1;
 
 	/**
-	 * Request code for editing a player's portrait
+	 * Request code for the gallery
+	 */
+	private static final int GALLERY_REQUEST_CODE = 3;
+
+	/**
+	 * Request code for editing a player's portrait using the camera
 	 */
 	private static final int EDIT_CAMERA_REQUEST_CODE = 2;
+
+	/**
+	 * Request code for editing a player's portrait using the gallery
+	 */
+	private static final int EDIT_GALLERY_REQUEST_CODE = 4;
 
 	/**
 	 * List of all configurations
@@ -161,15 +172,23 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 	 */
 	protected int playerBeingEdited = -1;
 
+
 	@Override
 	public void onCreate(Bundle savedInstanceState){
 		super.onCreate(savedInstanceState);
 
 		//hide the title bar
-		this.requestWindowFeature(Window.FEATURE_NO_TITLE);
+		if(Build.VERSION.SDK_INT < Build.VERSION_CODES.HONEYCOMB){
+			//hide the title bar
+			this.requestWindowFeature(Window.FEATURE_NO_TITLE);
 
-		//set the layout
-		setContentView(R.layout.activity_tournament_configuration);
+			setContentView(R.layout.activity_tournament_configuration);
+		} else {
+			//Show the action bar on newer devices, for the menu
+			setContentView(R.layout.activity_tournament_configuration);
+			getActionBar().setDisplayShowHomeEnabled(false);
+			getActionBar().setDisplayShowTitleEnabled(false);
+		}
 
 		//initialize instance variables
 		initializeInstanceVariables();
@@ -178,6 +197,9 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		initializeListeners(); 
 
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
+
+
+
 	}
 
 	@Override
@@ -212,7 +234,9 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			//set the button's image to the taken picture
 			BitmapDrawable image = PictureLoader.loadAndOrientPicture(getResources(), filepath);
 			portrait.setImageDrawable(image);
-
+			
+			//update gallery with new image
+			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.fromFile(Environment.getExternalStorageDirectory())));
 
 		} else if (requestCode == EDIT_CAMERA_REQUEST_CODE && resultCode == Activity.RESULT_OK){
 			//get path to picture taken
@@ -229,7 +253,58 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			}
 			if (recentPlayers.contains(old)){
 				recentPlayers.set(recentPlayers.indexOf(old), p);
-				StorageManager.saveSavable("SavedPlayers", recentPlayers, getApplicationContext());
+				StorageManager.saveSavable("SavedPlayers", recentPlayers, this);
+			}
+			
+			//update gallery with new image
+			sendBroadcast(new Intent(Intent.ACTION_MEDIA_MOUNTED, Uri.fromFile(Environment.getExternalStorageDirectory())));
+		}
+		else if (requestCode == GALLERY_REQUEST_CODE && resultCode == RESULT_OK && data != null) {
+			//get path to picture taken
+			//parse the data
+			imageUri = Uri.parse(data.getDataString());
+
+			//retrieve from database
+			Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
+			cursor.moveToFirst();
+			int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+
+			//get the path to the real file
+			String filepath = cursor.getString(idx);
+			imageUri = Uri.fromFile(new File(filepath));
+
+			//get the camera ImageButton
+			ImageView portrait = (ImageView)findViewById(R.id.playerPortrait);
+
+			//set the button's image to the taken picture
+			BitmapDrawable image = PictureLoader.loadAndOrientPicture(getResources(), filepath);
+			portrait.setImageDrawable(image);
+		}
+		else if (requestCode == EDIT_GALLERY_REQUEST_CODE && resultCode == Activity.RESULT_OK){
+			//get path to picture taken
+			imageUri = Uri.parse(data.getDataString());
+
+			//retrieve from database
+			Cursor cursor = getContentResolver().query(imageUri, null, null, null, null);
+			cursor.moveToFirst();
+			int idx = cursor.getColumnIndex(MediaStore.Images.ImageColumns.DATA);
+
+			//get the path to the real file
+			String filepath = cursor.getString(idx);
+			imageUri = Uri.fromFile(new File(filepath));
+
+			SavablePlayer old = players.get(playerBeingEdited);
+			SavablePlayer p = new SavablePlayer(old.getUUID(), old.getName(), old.isGhost(), old.getSeedValue(), filepath);
+			players.set(playerBeingEdited, p);
+			if (selectedPlayers.contains(old)){
+				selectedPlayers.set(selectedPlayers.indexOf(old), p);
+			}
+			if (addedPlayers.contains(old)){
+				addedPlayers.set(addedPlayers.indexOf(old), p);
+			}
+			if (recentPlayers.contains(old)){
+				recentPlayers.set(recentPlayers.indexOf(old), p);
+				StorageManager.saveSavable("SavedPlayers", recentPlayers, this);
 			}
 		}
 	}
@@ -273,27 +348,28 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 		//save added players with loaded players
 		recentPlayers.addAll(addedPlayers);
-		StorageManager.saveSavable(SAVED_PLAYER_LIST, recentPlayers, getApplicationContext());
+		StorageManager.saveSavable(SAVED_PLAYER_LIST, recentPlayers, this);
 	}
 
 	/**
 	 * Displays the help text
 	 */
 	private void showHelp() {
-		// Create and show the warning dialog.
-		DialogFragment warning = new HelpDialog("When you are all done, press save to save all changes.");
-		warning.show(getSupportFragmentManager(), "Help Dialog");
 
-		warning = new HelpDialog("If you wish to add a player that isn't in the list, enter their name and then press the green plus button.");
-		warning.show(getSupportFragmentManager(), "Help Dialog");
+		// Create and show the help dialog.
+		final Dialog dialog = new Dialog(TournamentConfigurationActivity.this);
+		dialog.setContentView(R.layout.activity_config_help);
+		dialog.setTitle("Tournament Configuration Help");
+		dialog.setCancelable(true);
+		Button closeButton = (Button) dialog.findViewById(R.id.help_close_button);
+		closeButton.setOnClickListener(new Button.OnClickListener() {      
+			public void onClick(View view) { 
+				dialog.dismiss();     
+			}
+		});
+		dialog.show();
 
-		warning = new HelpDialog("Choose the tournament name, select the players you would like to participate in your tournament, and choose " +
-				"which plugin you would like to use.");
-		warning.show(getSupportFragmentManager(), "Help Dialog");
 
-		warning = new HelpDialog("This is the tournament configuration screen. You will use this " +
-				"screen whenever you want to create or modify a tournament.");
-		warning.show(getSupportFragmentManager(), "Help Dialog");
 		StorageManager.saveBoolean("ConfigFirstUse", false, this);
 	}
 
@@ -371,7 +447,8 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		players.remove(position);
 
 		EditText playerEdit = (EditText)findViewById(R.id.playerNameField);
-		playerEdit.setHint("Player "+(recentPlayers.size()+addedPlayers.size()+1)); //Make the player hint change based on the number of players
+		//Make the player hint change based on the number of players
+		playerEdit.setHint(this.getNextPlayerNameHint());
 
 		reloadList();
 	}
@@ -501,7 +578,8 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		players.addAll(recentPlayers);
 
 		EditText playerEdit = (EditText)findViewById(R.id.playerNameField);
-		playerEdit.setHint("Player "+(recentPlayers.size()+1)); //Make the player hint change based on the number of players
+		//Make the player hint change based on the number of players
+		playerEdit.setHint(this.getNextPlayerNameHint());
 
 
 		//if there is no one in the tournament, select the profile by default
@@ -518,6 +596,18 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		list.setAdapter(new IconicAdapter());
 		list.setOnCreateContextMenuListener(this);
 		registerForContextMenu(list);
+
+		//update the number of players label
+		TextView t = (TextView) this.findViewById(R.id.num_players);
+		if(selectedPlayers!=null)
+		{
+			t.setText(selectedPlayers.size()+"");
+		}
+		else
+		{
+			t.setText("0");
+		}
+
 	}
 
 	/**
@@ -557,6 +647,9 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			}
 			configuration.setPlayers(savablePlayers);
 			selectedPlayers = configuration.getPlayers();
+
+			Button saveButton = (Button)findViewById(R.id.saveButton);
+			saveButton.setText("Apply Changes");
 
 		} //NOTE: the core is not modified (or created if new) until the save button is pressed
 
@@ -616,6 +709,10 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			}
 		});
 
+		//setup gallery button
+		ImageButton galleryButton = (ImageButton)findViewById(R.id.galleryButton);
+		galleryButton.setOnClickListener(new OnGalleryButtonPressed(false));
+
 		ImageView portrait = (ImageView)findViewById(R.id.playerPortrait);
 		portrait.setOnClickListener(new OnClickListener(){
 
@@ -652,7 +749,8 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 		//clear the text box
 		playerEdit.setText("");
-		playerEdit.setHint("Player "+(recentPlayers.size()+addedPlayers.size()+1)); //Make the player hint change based on the number of players
+		//Make the player hint change based on the number of players
+		playerEdit.setHint(this.getNextPlayerNameHint()); 
 
 		//reset the portrait and the filepath
 		ImageView portrait = (ImageView)findViewById(R.id.playerPortrait);
@@ -660,6 +758,64 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		imageUri = Uri.parse("/");
 
 		reloadList();
+	}
+
+	/**
+	 * Returns the next logical number for an added player. This will 
+	 * return the next number larger than the total number of 
+	 * players that is not in use. Ignores whitespace and case when
+	 * determining equality. Ex: "	PlAYer 2 " and "Player 2" are 
+	 * considered equal.
+	 * @return player hint text
+	 */
+	private String getNextPlayerNameHint(){
+		int index = (recentPlayers.size()+addedPlayers.size()+1);
+		String ret = "Player "+index;
+		//true if in list
+		boolean inList=true;
+
+		//loop until a uniquely numbered player name is found
+		while(inList)
+		{
+			//determine if in list of players
+			boolean hasBeenFound=false;
+			//look through recent
+			for(int i=0;i<this.recentPlayers.size();i++){
+				//determine equality ignoring case and leading/trailing whitespace
+				if(recentPlayers.get(i).getName().trim().equalsIgnoreCase(ret))
+				{
+					hasBeenFound=true;
+					break;
+				}
+			}
+
+			//look through added players
+			if(!hasBeenFound)
+			{
+				for(int i=0;i<this.addedPlayers.size();i++){
+					//determine equality ignoring case and leading/trailing whitespace
+					if(addedPlayers.get(i).getName().trim().equalsIgnoreCase(ret))
+					{
+						hasBeenFound=true;
+						break;
+					}
+				}
+			}		
+			if(!hasBeenFound)
+			{
+				//name wasn't found therefore its safe to return it
+				inList=false;
+			}
+			else
+			{
+				//increment index and stay in while loop
+				index++;
+				ret = "Player "+index;
+			}
+		}
+
+
+		return ret;
 	}
 
 	/**
@@ -698,43 +854,23 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			}
 		}
 
-		while(!setUpAdapter(pluginIndex, discoveredPlugins));
+		setUpAdapter(pluginIndex, discoveredPlugins);
 	}
 
 	/**
 	 * Responsible for setting up the spinner adapter to display the plugins
 	 * @param pluginIndex The index of the plugin to show
 	 * @param discoveredPlugins The list of discovered plugins
-	 * @return True if successful
 	 */
-	private boolean setUpAdapter(int pluginIndex, ArrayList<String> discoveredPlugins){
-		try{
-			Spinner s = (Spinner)findViewById(R.id.pluginSelectionSpinner);
-			//TODO: I recommend using this as the context -- Cory
-			//Context c = this;
-			Context c = getApplicationContext();
-			if (c == null){
-				throw new NullPointerException();  //This is where the exception is coming from
-			}
-			ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(c, android.R.layout.simple_spinner_item, discoveredPlugins);
-			spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
-			s.setAdapter(spinnerAdapter);
-			if (pluginIndex > -1){
-				s.setSelection(pluginIndex);
-			}
-			return true;
-		} catch (NullPointerException e){
-			//TODO: OPTIMIZE
-			//There is occasionally a race condition problem where it has gotten here 
-			//without the context initializing yet. 
-			//For now, we're just going to try again until it works
-			try {
-				Thread.sleep(0, 1); //sleep just long enough to yield the process
-			} catch (InterruptedException e1) {
-				//do nothing because we just wanted to yield the process and we don't care
-				//if it got interrupted
-			}
-			return false;
+	private void setUpAdapter(int pluginIndex, ArrayList<String> discoveredPlugins){
+
+		Spinner s = (Spinner)findViewById(R.id.pluginSelectionSpinner);
+
+		ArrayAdapter<String> spinnerAdapter = new ArrayAdapter<String>(this, android.R.layout.simple_spinner_item, discoveredPlugins);
+		spinnerAdapter.setDropDownViewResource(android.R.layout.simple_spinner_dropdown_item);
+		s.setAdapter(spinnerAdapter);
+		if (pluginIndex > -1){
+			s.setSelection(pluginIndex);
 		}
 	}
 
@@ -743,7 +879,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 	 * @param text The text to display
 	 */
 	private void showError(String text){
-		Toast.makeText(getApplicationContext(), text, Toast.LENGTH_LONG).show();
+		Toast.makeText(this, text, Toast.LENGTH_LONG).show();
 	}
 
 	/**
@@ -818,7 +954,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			setResult(RESULT_OK, resultIntent);
 
 			tournamentCore.setDeviceId(selectedProfile.getId());
-			StorageManager.saveSavable("ConfigurationList", configurationList, getApplicationContext());
+			StorageManager.saveSavable("ConfigurationList", configurationList, TournamentConfigurationActivity.this);
 
 			//send updated player list
 			tournamentCore.sendPlayerList();
@@ -888,7 +1024,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				task.execute(players.get(position));
 			} else {
 				Bitmap bm = players.get(position).getPortrait();
-				if (bm != null){
+				if (bm != null && !bm.isRecycled()){
 					portrait.setImageBitmap(bm);
 				} else {
 					portrait.setImageResource(R.drawable.silhouette);
@@ -943,9 +1079,22 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 					if (isChecked){
 						//add to selected
 						selectedPlayers.add(players.get(finalPos));
+
+
 					} else {
 
 						selectedPlayers.remove(players.get(finalPos));
+					}
+
+					//update the number of players label
+					TextView t = (TextView) findViewById(R.id.num_players);
+					if(selectedPlayers!=null)
+					{
+						t.setText(selectedPlayers.size()+"");
+					}
+					else
+					{
+						t.setText("0");
 					}
 				}
 
@@ -1000,7 +1149,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				task.execute(players.get(position));
 			} else {
 				Bitmap bm = players.get(position).getPortrait();
-				if (bm != null){
+				if (bm != null && !bm.isRecycled()){
 					portrait.setImageBitmap(bm);
 				} else {
 					portrait.setImageResource(R.drawable.silhouette);
@@ -1040,7 +1189,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 					}
 					if (recentPlayers.contains(old)){
 						recentPlayers.set(recentPlayers.indexOf(old), p);
-						StorageManager.saveSavable("SavedPlayers", recentPlayers, getApplicationContext());
+						StorageManager.saveSavable("SavedPlayers", recentPlayers, TournamentConfigurationActivity.this);
 					}
 
 					playerBeingEdited = -1;
@@ -1049,7 +1198,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				}
 			});
 
-
+			//setup camera button
 			ImageButton cameraButton = (ImageButton)convertView.findViewById(R.id.cameraButton);
 			cameraButton.setOnClickListener(new OnClickListener(){
 
@@ -1078,11 +1227,49 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 			});
 
+			//setup camera button
+			ImageButton galleryButton = (ImageButton)convertView.findViewById(R.id.galleryButton);
+			galleryButton.setOnClickListener(new OnGalleryButtonPressed(true));
 
 			return convertView;
 		}
 	}
 
+	/**
+	 * Listener for when the Gallery button is pressed in the edit field
+	 * @author kreierj
+	 * @version 4/25/2012
+	 *
+	 */
+	private class OnGalleryButtonPressed implements OnClickListener{
+
+		/**
+		 * holds whether this listener is an edit or add listener
+		 */
+		private boolean isEdit;
+		/**
+		 * constructor for a Gallery button pressed listener
+		 * @param isEdit true if it is the edit gallery button, false if it is the add player gallery button
+		 */
+		protected OnGalleryButtonPressed(boolean isEdit)
+		{
+			this.isEdit=isEdit;
+		}
+		@Override
+		public void onClick(View v) {
+			//start an activity to retrieve a gallery photo from the file system
+			Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
+			if(isEdit)
+			{
+				startActivityForResult(i, EDIT_GALLERY_REQUEST_CODE);
+			}
+			else
+			{
+				startActivityForResult(i, GALLERY_REQUEST_CODE);
+			}
+		}
+
+	}
 
 	/**
 	 * Responsible for displaying a warning if the user presses clear
@@ -1114,7 +1301,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 
 					//save the player list
-					StorageManager.saveSavable(SAVED_PLAYER_LIST, recentPlayers, getApplicationContext());
+					StorageManager.saveSavable(SAVED_PLAYER_LIST, recentPlayers, TournamentConfigurationActivity.this);
 
 					//remove all from selected players that are not profiles
 					for (int i = 0; i < selectedPlayers.size(); ){
@@ -1129,7 +1316,8 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 
 					EditText playerEdit = (EditText)findViewById(R.id.playerNameField);
-					playerEdit.setHint("Player "+(recentPlayers.size()+1)); //Make the player hint change based on the number of players
+					//Make the player hint change based on the number of players
+					playerEdit.setHint(getNextPlayerNameHint());
 
 					reloadList();
 				}
@@ -1172,7 +1360,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 					}
 					if (recentPlayers.contains(old)){
 						recentPlayers.set(recentPlayers.indexOf(old), p);
-						StorageManager.saveSavable("SavedPlayers", recentPlayers, getApplicationContext());
+						StorageManager.saveSavable("SavedPlayers", recentPlayers, TournamentConfigurationActivity.this);
 					}
 
 					reloadList();

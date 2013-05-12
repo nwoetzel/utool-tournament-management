@@ -35,18 +35,17 @@
         android:layout_below="@+id/utool_long_title"
         android:progress="100" />
 
-
     <TextView
         android:id="@+id/nameTextView"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_above="@+id/listView1"
+        android:layout_alignBottom="@+id/nameTextField"
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/progressBar1"
+        android:gravity="center"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
         android:text="@string/tournamentNameLabel"
-        android:gravity="center"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
     <EditText
@@ -67,7 +66,7 @@
         android:layout_height="2sp"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:layout_below="@+id/nameTextField"
+        android:layout_below="@+id/num_players"
         android:progress="100" />
 
     <Button
@@ -77,9 +76,7 @@
         android:layout_alignParentBottom="true"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
-        android:text="@string/save" />
-
-
+        android:text="@string/create" />
 
     <Spinner
         android:id="@+id/pluginSelectionSpinner"
@@ -99,53 +96,59 @@
         android:layout_alignParentRight="true"
         android:progress="100" />
 
-    <ImageButton
-        android:id="@+id/addButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/pluginSelectionSpinner"
-        android:layout_alignParentRight="true"
-        android:src="@android:drawable/ic_input_add"
-        android:contentDescription="@string/addButtonText" />
-
-    <ImageButton
-        android:id="@+id/cameraButton"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_above="@+id/pluginSelectionSpinner"
-        android:layout_toLeftOf="@+id/addButton"
-        android:src="@android:drawable/ic_menu_camera"
-        android:contentDescription="@string/cameraButton" />
-
-
-    <ImageView
-        android:id="@+id/playerPortrait"
-        android:layout_width="48dp"
+    <LinearLayout
+        android:id="@+id/addPlayerRow"
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
         android:layout_above="@+id/progressBar3"
-        android:layout_alignTop="@+id/cameraButton"
-        android:layout_toLeftOf="@+id/cameraButton"
-        android:src="@drawable/silhouette"
-        android:contentDescription="@string/playerPortrait" />
+        android:orientation="horizontal" >
 
-    <EditText
-        android:id="@+id/playerNameField"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_alignBottom="@+id/playerPortrait"
-        android:layout_alignParentLeft="true"
-        android:layout_toLeftOf="@+id/playerPortrait"
-        android:ems="10"
-        android:hint="@string/playerNameHint"
-        android:inputType="textPersonName" />
+        <EditText
+            android:id="@+id/playerNameField"
+            android:layout_height="match_parent"
+            android:layout_width="0dp"
+            android:layout_weight="0.45"
+            android:ems="10"
+            android:hint="@string/playerNameHint"
+            android:inputType="textPersonName" />
 
+        <ImageView
+            android:id="@+id/playerPortrait"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/playerPortrait"
+            android:src="@drawable/silhouette" />
+
+        <ImageButton
+            android:id="@+id/cameraButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/cameraButton"
+            android:src="@android:drawable/ic_menu_camera"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:id="@+id/galleryButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:src="@android:drawable/ic_menu_gallery"
+            android:layout_gravity="center" />
+
+        <ImageButton
+            android:id="@+id/addButton"
+            android:layout_width="40dp"
+            android:layout_height="40dp"
+            android:contentDescription="@string/addButtonText"
+            android:src="@android:drawable/ic_input_add"
+            android:layout_gravity="center" />
+    </LinearLayout>
 
     <ProgressBar
         android:id="@+id/progressBar4"
         style="?android:attr/progressBarStyleHorizontal"
         android:layout_width="wrap_content"
         android:layout_height="2sp"
-        android:layout_above="@+id/playerPortrait"
+        android:layout_above="@+id/addPlayerRow"
         android:layout_alignParentLeft="true"
         android:layout_alignParentRight="true"
         android:progress="100" />
@@ -154,12 +157,9 @@
         android:id="@+id/listView1"
         android:layout_width="fill_parent"
         android:layout_height="fill_parent"
-		android:layout_below="@+id/progressBar2"
-        android:layout_above="@+id/progressBar4">
+        android:layout_above="@+id/progressBar4"
+        android:layout_below="@+id/progressBar2" >
     </ListView>
-
-
-
 
     <TextView
         android:id="@+id/tournamentTypeLabel"
@@ -169,10 +169,29 @@
         android:layout_alignParentLeft="true"
         android:layout_below="@+id/playerNameField"
         android:layout_toLeftOf="@+id/pluginSelectionSpinner"
+        android:gravity="center"
         android:paddingBottom="7dp"
         android:paddingTop="7dp"
         android:text="@string/tournamentTypeLabel"
-        android:gravity="center"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/num_players_label"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignParentLeft="true"
+        android:layout_alignParentRight="true"
+        android:layout_below="@+id/nameTextView"
+        android:text="@string/num_players_registered_label"
+        android:textAppearance="?android:attr/textAppearanceMedium" />
+
+    <TextView
+        android:id="@+id/num_players"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_alignBaseline="@+id/num_players_label"
+        android:layout_alignBottom="@+id/num_players_label"
+        android:layout_toRightOf="@+id/num_players_label"
         android:textAppearance="?android:attr/textAppearanceMedium" />
 
 </RelativeLayout>

@@ -301,7 +301,7 @@ public class Core extends AbstractTournament {
 		} 
 		catch (ActivityNotFoundException e)
 		{
-			tournamentIntent.setClass(context.getApplicationContext(), DummyMainActivity.class);
+			tournamentIntent.setClass(context, DummyMainActivity.class);
 			context.startActivity(tournamentIntent);
 		}
 	}

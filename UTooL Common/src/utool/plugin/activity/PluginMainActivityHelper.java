@@ -1,12 +1,14 @@
 package utool.plugin.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 
 import utool.plugin.Player;
 
 import android.app.Activity;
 import android.os.Bundle;
+import android.os.RemoteException;
 
 /**
  * Plugin activity helper for the entry point activity
@@ -15,52 +17,53 @@ import android.os.Bundle;
  */
 public class PluginMainActivityHelper extends PluginServiceActivityHelper {
 	
-	/**
-	 * The tournament's name
-	 */
-	@Deprecated
-	String tournamentName = null;
-	
+// 	/**
+//	 * The tournament's name from the initial plugin instantiation
+//	 */
+//	private String tournamentName = null;
+//	
+//	/**
+//	 * The player list received from the core
+//	 */
+//	@Deprecated
+//	ArrayList<Player> playerList;
+
 	/**
 	 * Get the tournament's name
 	 * @return Tournament's name
 	 */
-	@Deprecated
 	public String getTournamentName(){
-		return tournamentName;
+//		if (mICore == null){
+//			//return initial version from core
+//			return tournamentName;
+//		}
+		try {
+			if (mICore == null){
+				throw new RuntimeException(SERVICE_UNAVAILABLE_EXCEPTION_MESSAGE);
+			} else {
+				return mICore.getTournamentName();
+			}
+		} catch (RemoteException e) {
+		}
+		return "";
 	}
-	
-	/**
-	 * Set the tournament's name
-	 * @param tournamentName Tournament's name
-	 */
-	@Deprecated
-	public void setTournamentName(String tournamentName){
-		this.tournamentName = tournamentName;
-	}
-	
-	/**
-	 * The player list received from the core
-	 */
-	@Deprecated
-	ArrayList<Player> playerList;
 	
 	/**
 	 * Get the player list
 	 * @return Player list
 	 */
-	@Deprecated
-	public ArrayList<Player> getPlayerList(){
-		return playerList;
-	}
-	
-	/**
-	 * Set the player list
-	 * @param playerList Player list
-	 */
-	@Deprecated
-	public void setPlayerList(ArrayList<Player> playerList){
-		this.playerList = playerList;
+	public List<Player> getPlayerList(){
+//		if (mICore == null){
+//			return playerList;
+//		}
+		try {
+			if (mICore == null){
+				throw new RuntimeException(SERVICE_UNAVAILABLE_EXCEPTION_MESSAGE);
+			}
+			return mICore.getPlayerList();
+		} catch (RemoteException e) {
+		}
+		return new ArrayList<Player>();
 	}
 	
 	/**
@@ -113,8 +116,8 @@ public class PluginMainActivityHelper extends PluginServiceActivityHelper {
 		
 		//Get extras passed from the core
 		Bundle extras = activity.getIntent().getExtras();
-		tournamentName = extras.getString("tournamentName");
-		playerList = extras.getParcelableArrayList("playerList");
+//		tournamentName = extras.getString("tournamentName");
+//		playerList = extras.getParcelableArrayList("playerList");
 		permissionLevel = extras.getInt("permissionLevel");
 		pid = UUID.fromString(extras.getString("pid"));
 		isNewInstance = extras.getBoolean("isNewInstance", false);

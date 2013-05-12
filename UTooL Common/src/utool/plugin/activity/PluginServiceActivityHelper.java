@@ -19,6 +19,11 @@ import android.os.RemoteException;
 public class PluginServiceActivityHelper extends PluginCommonActivityHelper {
 	
 	/**
+	 * Message for when the mICore service connection isn't ready yet
+	 */
+	public static final String SERVICE_UNAVAILABLE_EXCEPTION_MESSAGE = "Service connection unavailable. Do not call this method before runOnServiceConnection() has started executing.";
+	
+	/**
 	 * IPluginServiceActivity reference to the activity
 	 */
 	private IPluginServiceActivity iActivity;
@@ -88,12 +93,16 @@ public class PluginServiceActivityHelper extends PluginCommonActivityHelper {
 	/**
 	 * The reference to the UTooLCore Service instance for this plugin
 	 */
-	public IUTooLCore mICore;
+	public volatile IUTooLCore mICore;
 	
 	/**
 	 * Current mConnection instance
 	 */
 	private MConnection mConnection;
+	
+	private IUTooLCore mICore(){
+		return mICore;
+	}
 	
 	/**
 	 * The connection to the UTooLCore Service instance for this plugin

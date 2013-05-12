@@ -7,6 +7,7 @@ interface IUTooLCore
 {
 	int startServer(in long tournamentId);
 	void setTournamentInformation(String tournamentName);
+	String getTournamentName();
 	void setInitialConnectMessage(String message);
 	int getConnectionCount();
 	List<Player> getPlayerList();

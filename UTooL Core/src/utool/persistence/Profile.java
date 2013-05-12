@@ -102,8 +102,9 @@ public class Profile extends Player implements Comparable<Profile>, Savable{
 		if (o instanceof Profile){
 			Profile p = (Profile)o;
 			return uuid.equals(p.getId());
+		} else {
+			return super.equals(o);
 		}
-		return false;
 
 	}
 }

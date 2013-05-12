@@ -17,6 +17,9 @@ import utool.networking.packet.HostInformation;
 import android.content.Context;
 import android.net.DhcpInfo;
 import android.net.wifi.WifiManager;
+import android.net.wifi.WifiManager.WifiLock;
+import android.os.PowerManager;
+import android.os.PowerManager.WakeLock;
 
 /**
  * This class handles sending and receiving broadcast tournament advertisement packets.
@@ -45,11 +48,6 @@ public class BroadcastManager {
 	private static java.net.DatagramSocket discoverySocket;
 
 	/**
-	 * A list of all hosts detected
-	 */
-	//private static List<HostInformation> discoveredHosts = new ArrayList<HostInformation>();
-
-	/**
 	 * The socket used for sending advertisements out on.
 	 */
 	private java.net.DatagramSocket advertisementSocket;
@@ -68,6 +66,11 @@ public class BroadcastManager {
 	 * Context received from the Android class that instantiated this class.
 	 */
 	private Context context;
+	
+	/**
+	 * WiFi lock for each broadcast manager instance
+	 */
+	private WifiLock wifiLock;
 	
 	/**
 	 * HashMap of all BroadcastManagers
@@ -106,6 +109,20 @@ public class BroadcastManager {
 	}
 	
 	/**
+	 * Start advertising on all existing broadcast managers
+	 */
+	public static void startAllBroadcastManagers(){
+		synchronized (broadcastManagers) {
+			for (BroadcastManager b: broadcastManagers.values()){
+				try {
+					b.startServerAdvertisement();
+				} catch (SocketException e) {
+				}
+			}
+		}
+	}
+	
+	/**
 	 * Stop advertising on all broadcast managers
 	 */
 	public static void stopAllBroadcastManagers(){
@@ -137,6 +154,7 @@ public class BroadcastManager {
 			//discoveredHosts.clear();
 			discoverySocket = new DatagramSocket(DISCOVERY_PORT_NUMBER);
 			discoverySocket.setBroadcast(true);
+			discoverySocket.setSoTimeout(0);
 			//Runnable for listening on the socket
 			Runnable discoveryRunnable = new Runnable() {
 
@@ -146,7 +164,7 @@ public class BroadcastManager {
 						DatagramPacket packet = new DatagramPacket(buf, buf.length);
 						try {
 							discoverySocket.receive(packet);
-							HostInformation hostInfo = new HostInformation(packet.getAddress(), packet.getData());
+							HostInformation hostInfo = new HostInformation(packet.getAddress(), packet.getData(), packet.getLength());
 							addDiscoveredHost(hostInfo);
 						} catch (Exception e) {
 							//On error, just break the loop and stop the thread
@@ -188,6 +206,13 @@ public class BroadcastManager {
 		if (advertisementThread == null || !advertisementThread.isAlive()){
 			advertisementSocket = new DatagramSocket();
 			advertisementSocket.setBroadcast(true);
+			
+			WifiManager wifi = (WifiManager) context.getApplicationContext().getSystemService(Context.WIFI_SERVICE);
+			if (wifiLock != null && !wifiLock.isHeld()){
+				wifiLock = wifi.createWifiLock(WifiManager.WIFI_MODE_FULL, "BroadcastWifiLock");
+				wifiLock.acquire();
+			}
+			
 			//Prepare advertisement runnable
 			Runnable advertisementRunnable = new Runnable() {
 
@@ -199,6 +224,9 @@ public class BroadcastManager {
 							DatagramPacket packet = new DatagramPacket(advertisementData, advertisementData.length, broadcastAddress, DISCOVERY_PORT_NUMBER);
 							advertisementSocket.send(packet);
 							Thread.sleep(500, 0);
+						}
+						if (wifiLock != null && wifiLock.isHeld()){
+							wifiLock.release();
 						}
 					} catch (Exception e) {
 					}

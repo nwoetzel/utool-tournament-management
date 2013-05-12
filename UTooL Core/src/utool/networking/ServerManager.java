@@ -14,6 +14,7 @@ import android.util.Log;
 
 import utool.core.Core;
 import utool.networking.packet.HostInformation;
+import utool.plugin.activity.PluginCommonActivityHelper;
 
 /**
  * This class listens for incoming connections, and handles sending and receiving data from established client connections.
@@ -177,7 +178,7 @@ public class ServerManager extends SocketWrapper {
 		}
 		listenerSocket = null;
 		try {
-			receivedData.put("-1".getBytes());
+			receivedData.put(PluginCommonActivityHelper.UTOOL_SOCKET_CLOSED_MESSAGE.getBytes());
 		} catch (InterruptedException e1) {
 		}
 		synchronized (connections) {

@@ -1,6 +1,7 @@
 package utool.plugin.activity;
 
 import java.util.ArrayList;
+import java.util.List;
 import java.util.UUID;
 import utool.plugin.Player;
 import android.app.Activity;
@@ -27,8 +28,7 @@ public abstract class AbstractPluginMainReference extends Activity implements IP
 	 * Get the player list
 	 * @return Player list
 	 */
-	@Deprecated
-	public ArrayList<Player> getPlayerList(){
+	public List<Player> getPlayerList(){
 		return pluginHelper.getPlayerList();
 	}
 		

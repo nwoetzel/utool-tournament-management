@@ -1,20 +1,13 @@
 package utool.networking.packet;
 
-import java.io.ByteArrayInputStream;
-import java.io.IOException;
-import java.io.InputStream;
 import java.io.StringReader;
 import java.io.StringWriter;
 import java.net.InetAddress;
 import java.util.UUID;
-
 import org.xmlpull.v1.XmlPullParser;
-import org.xmlpull.v1.XmlPullParserException;
 import org.xmlpull.v1.XmlSerializer;
-
 import utool.core.AbstractTournament;
 import utool.networking.XmlMessageTypeException;
-
 import android.util.Xml;
 
 /**
@@ -47,34 +40,18 @@ public class HostInformation extends AbstractTournament implements IXmlMessage{
 	 * Decode a HostInformation packet received from the network.
 	 * @param serverAddress The address the packet was broadcast from. This is the server's address.
 	 * @param data The packet data to decode. This data is XML formatted.
+	 * @param length The length of the string data in data[]
 	 */
-	public HostInformation(InetAddress serverAddress, byte[] data){
+	public HostInformation(InetAddress serverAddress, byte[] data, int length){
 		this.serverAddress = serverAddress;
-		InputStream input = new ByteArrayInputStream(data);
+		//InputStream input = new ByteArrayInputStream(data);
+		String xml = new String(data, 0, length);
 		this.setTournamentLocation(TournamentLocationEnum.RemoteDiscovered);
 
-		try{
-			XmlPullParser parser = Xml.newPullParser();
-			parser.setFeature(XmlPullParser.FEATURE_PROCESS_NAMESPACES, false);
-			parser.setInput(input, null);
-			parser.nextTag();
-			while (parser.next() != XmlPullParser.END_TAG) {
-				String name = parser.getName();
-				if (name != null && name.equalsIgnoreCase(SERVER_NAME_TAG)){
-					this.tournamentName = parser.nextText();
-				} else if (name != null && name.equalsIgnoreCase(SERVER_PORT_TAG)){
-					this.serverPort = Integer.parseInt(parser.nextText());
-				} else if (name != null && name.equalsIgnoreCase(UUID_TAG)){
-					this.tournamentUUID = UUID.fromString(parser.nextText());
-				}
-			}
-		} catch (XmlPullParserException e) {
-		} catch (IOException e) {
-		} finally {
-			try {
-				input.close();
-			} catch (IOException e) {
-			}
+		try {
+			decodeMessage(xml);
+		} catch (XmlMessageTypeException e) {
+			//do nothing
 		}
 		lastSeen = System.nanoTime();
 	}
@@ -108,15 +85,19 @@ public class HostInformation extends AbstractTournament implements IXmlMessage{
 				throw new XmlMessageTypeException("Not a host information message: " + parser.getName());
 			}
 
-			while (parser.next() != XmlPullParser.END_TAG) {
+			int next = parser.next();
+			while (next != XmlPullParser.END_DOCUMENT) {
 				String name = parser.getName();
-				if (name != null && name.equalsIgnoreCase(SERVER_NAME_TAG)){
-					this.tournamentName = parser.nextText();
-				} else if (name != null && name.equalsIgnoreCase(SERVER_PORT_TAG)){
-					this.serverPort = Integer.parseInt(parser.nextText());
-				} else if (name != null && name.equalsIgnoreCase(UUID_TAG)){
-					this.tournamentUUID = UUID.fromString(parser.nextText());
+				if (parser.getEventType() == XmlPullParser.START_TAG){
+					if (name != null && name.equalsIgnoreCase(SERVER_NAME_TAG)){
+						this.tournamentName = parser.nextText();
+					} else if (name != null && name.equalsIgnoreCase(SERVER_PORT_TAG)){
+						this.serverPort = Integer.parseInt(parser.nextText());
+					} else if (name != null && name.equalsIgnoreCase(UUID_TAG)){
+						this.tournamentUUID = UUID.fromString(parser.nextText());
+					}
 				}
+				next = parser.next();
 			}
 
 		} catch (Exception e) {

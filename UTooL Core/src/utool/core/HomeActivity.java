@@ -100,6 +100,11 @@ public class HomeActivity extends Activity {
 	 * UUID to connect as, when the Connect As activity has been used
 	 */
 	private Player connectAsPlayer;
+	
+	/**
+	 * Boolean controlling whether BroadcastManager is broadcasting/receiving remote tournaments
+	 */
+	private boolean networkingEnabled = true;
 
 	/**
 	 * The player connection type last selected
@@ -171,7 +176,7 @@ public class HomeActivity extends Activity {
 			} 
 			catch (ActivityNotFoundException e)
 			{
-				tournamentIntent.setClass(getApplicationContext(), DummyMainActivity.class);
+				tournamentIntent.setClass(HomeActivity.this, DummyMainActivity.class);
 				tournamentCore.startPlugin(HomeActivity.this, tournamentIntent);
 			}
 		}
@@ -220,7 +225,7 @@ public class HomeActivity extends Activity {
 		}
 		if (profiles == null || profiles.size() == 0){
 			//if there is not, then send them to the profile screen
-			Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+			Intent i = new Intent(this, ProfileActivity.class);
 			i.putExtra("createOnSave", true);
 			startActivity(i);
 			finish();
@@ -318,7 +323,7 @@ public class HomeActivity extends Activity {
 					d.show();
 				} else if (item.equals(edit)){
 					//Go to tournament configuration
-					Intent i = new Intent(getApplicationContext(), TournamentConfigurationActivity.class);
+					Intent i = new Intent(HomeActivity.this, TournamentConfigurationActivity.class);
 					i.putExtra("tournamentId", ((Core)tournament).getTournamentId());
 					startActivityForResult(i, TOURNAMENT_CONFIGURATION_EDIT_ACTIVITY_REQUEST_CODE);
 				} else if (item.equals(options)){
@@ -484,7 +489,7 @@ public class HomeActivity extends Activity {
 		//======Set the device ID and host name of the user=======================
 		SavableProfileList profiles = null;
 		try {
-			profiles = (SavableProfileList)StorageManager.loadSavable(ProfileActivity.PROFILE_LIST_KEY, SavableProfileList.class, getApplicationContext(), null);
+			profiles = (SavableProfileList)StorageManager.loadSavable(ProfileActivity.PROFILE_LIST_KEY, SavableProfileList.class, this, null);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -495,6 +500,9 @@ public class HomeActivity extends Activity {
 		}
 		Profile p = profiles.getSelectedProfile();
 		Core tournamentCore = tournament.createTournament(p.getId());
+		if (tournamentCore.getPlayerList().contains(p)){
+			tournamentCore.addPlayer(p);
+		}
 		//determine config index
 		SavableConfigurationList list = loadConfigurationList();
 		int configIndex = list.indexOf(tournament);
@@ -521,7 +529,7 @@ public class HomeActivity extends Activity {
 		//======Set the device ID and host name of the user=======================
 		SavableProfileList profiles = null;
 		try {
-			profiles = (SavableProfileList)StorageManager.loadSavable(ProfileActivity.PROFILE_LIST_KEY, SavableProfileList.class, getApplicationContext(), null);
+			profiles = (SavableProfileList)StorageManager.loadSavable(ProfileActivity.PROFILE_LIST_KEY, SavableProfileList.class, HomeActivity.this, null);
 		} catch (InstantiationException e) {
 			e.printStackTrace();
 		} catch (IllegalAccessException e) {
@@ -557,7 +565,7 @@ public class HomeActivity extends Activity {
 		// Handle item selection
 		switch (item.getItemId()) {
 			case R.id.menu_profiles:
-				Intent i = new Intent(getApplicationContext(), ProfileActivity.class);
+				Intent i = new Intent(HomeActivity.this, ProfileActivity.class);
 				startActivity(i);
 				return true;
 			case R.id.menu_help:
@@ -565,6 +573,9 @@ public class HomeActivity extends Activity {
 				return true;
 			case R.id.menu_direct_connect:
 				showDirectConnect();
+				return true;
+			case R.id.menu_enable_networking:
+				toggleNetworking(!item.isChecked());
 				return true;
 			default:
 				return super.onOptionsItemSelected(item);
@@ -584,6 +595,22 @@ public class HomeActivity extends Activity {
 		try {
 			BroadcastManager.startHostDiscovery();
 		} catch (SocketException e) {
+		}
+
+		if (StorageManager.loadBoolean("HomeFirstUse", this, true)){
+			StorageManager.saveBoolean("HomeFirstUse", false, this);
+			
+			AlertDialog.Builder b = new AlertDialog.Builder(HomeActivity.this);
+			b.setTitle("Welcome to UTooL!");
+			b.setMessage("If you ever need help, press Menu (or the vertical ellipsis button) then Help.");
+			b.setNegativeButton("Close", new DialogInterface.OnClickListener() {
+				
+				@Override
+				public void onClick(DialogInterface dialog, int which) {
+					dialog.cancel();
+				}
+			});
+			b.show();
 		}
 	}
 
@@ -611,12 +638,14 @@ public class HomeActivity extends Activity {
 							mConnectionRemoteTournament.tournamentCore.setDeviceId(player.getPlayer().getUUID());
 							continueClientConnection(mConnectionRemoteTournament.tournamentCore);
 						} catch (RemoteException e) {
+							Log.e("Remote Exception", "yup", e);
 						}
 					} else {
 						closeServiceConnection();
 						return;
 					}
 				} else {
+					closeServiceConnection();
 					connectAsPlayer = null;
 				}
 				break;
@@ -649,6 +678,60 @@ public class HomeActivity extends Activity {
 			}
 		});
 		dialog.show();
+	}
+	
+	@Override
+	public boolean onPrepareOptionsMenu(Menu menu) {
+		MenuItem networkingMenuItem = menu.findItem(R.id.menu_enable_networking);
+		if (networkingEnabled){
+			networkingMenuItem.setChecked(true);
+		} else {
+			networkingMenuItem.setChecked(false);
+		}
+	    return super.onPrepareOptionsMenu(menu);
+	}
+	
+	/**
+	 * Toggle networking support
+	 * @param enable Set to true to enable, false to disable
+	 */
+	private void toggleNetworking(boolean enable){
+		AlertDialog.Builder b = new AlertDialog.Builder(HomeActivity.this);
+		String message = "Are you sure you want to %toggle networking? Currently connected clients will not be affected.";
+		if (enable){
+			message = message.replace("%toggle", "enable");
+		} else {
+			message = message.replace("%toggle", "disable");
+		}
+		b.setMessage(message);
+		class ToggleNetworking implements DialogInterface.OnClickListener{
+			private boolean enable;
+			public ToggleNetworking(boolean enable){
+				this.enable = enable;
+			}
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				networkingEnabled = enable;
+				if (!enable) {
+					BroadcastManager.stopHostDiscovery();
+					BroadcastManager.stopAllBroadcastManagers();
+				} else {
+					try {
+						BroadcastManager.startHostDiscovery();
+						BroadcastManager.startAllBroadcastManagers();
+					} catch (SocketException e) {}
+				}
+				HomeActivity.this.invalidateOptionsMenu();
+			}
+		}
+		b.setPositiveButton("Yes", new ToggleNetworking(enable));
+		b.setNegativeButton("Cancel", new DialogInterface.OnClickListener() {
+			@Override
+			public void onClick(DialogInterface dialog, int which) {
+				dialog.cancel();
+			}
+		});
+		b.show();
 	}
 	
 	/**
@@ -704,7 +787,7 @@ public class HomeActivity extends Activity {
 	 * @param view The clicked view
 	 */
 	private void newTournamentButton_onClick(View view){
-		Intent i = new Intent(getApplicationContext(), TournamentConfigurationActivity.class);
+		Intent i = new Intent(HomeActivity.this, TournamentConfigurationActivity.class);
 		startActivityForResult(i, TOURNAMENT_CONFIGURATION_ACTIVITY_REQUEST_CODE);
 	}
 
@@ -750,7 +833,7 @@ public class HomeActivity extends Activity {
 					configurationList.remove(t);
 
 					//resave the list
-					StorageManager.saveSavable("ConfigurationList", configurationList, getApplicationContext());
+					StorageManager.saveSavable("ConfigurationList", configurationList, HomeActivity.this);
 
 					//remove from memory
 					AbstractTournament.removeTournament(t.tournamentUUID);
@@ -790,6 +873,7 @@ public class HomeActivity extends Activity {
 				closeServiceConnection();
 			}
 		});
+		
 		progressDialog.show();
 
 		//Start up message reception thread
@@ -927,13 +1011,16 @@ public class HomeActivity extends Activity {
 				tournamentCore.serverPort = port;
 				BroadcastManager bcastmanager = new BroadcastManager(HomeActivity.this, tournamentCore.toString(), port, tournamentCore.getTournamentId(), tournamentCore.getTournamentUUID());
 				try {
-					bcastmanager.startServerAdvertisement();
+					if (networkingEnabled){
+						bcastmanager.startServerAdvertisement();
+					}
 
 					Intent i = tournamentCore.getIntent();
 					PluginStartMessage pluginStart = new PluginStartMessage(i.getComponent().getPackageName(), i.getComponent().getClassName());
 					String pluginStartXml = pluginStart.getXml();
-					mICoreLocalTournament.send(pluginStartXml);
 					mICoreLocalTournament.setInitialConnectMessage(pluginStartXml);
+					mICoreLocalTournament.send(pluginStartXml);
+					Log.d(LOG_TAG, "PluginStartMessage sent");
 
 					tournamentCore = null;
 					unbindService(this);

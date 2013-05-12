@@ -2,7 +2,9 @@ package utool.plugin;
 
 import java.io.ByteArrayOutputStream;
 import java.io.IOException;
+import java.util.Collections;
 import java.util.HashMap;
+import java.util.Map;
 import java.util.UUID;
 import android.graphics.Bitmap;
 import android.graphics.BitmapFactory;
@@ -24,7 +26,7 @@ public class Player implements Parcelable {
 	/**
 	 * List of bitmaps being used by players
 	 */
-	private static final HashMap<UUID, Bitmap> portraits = new HashMap<UUID, Bitmap>();
+	private static final Map<UUID, Bitmap> portraits = Collections.synchronizedMap(new HashMap<UUID, Bitmap>());
 
 	/**
 	 * Participant level of permissions.. meaning none
@@ -267,10 +269,8 @@ public class Player implements Parcelable {
 	public boolean equals(Object o){
 		if (o instanceof Player){
 			Player p = (Player)o;
-			//Check for id and name in case id is same
-			//TODO this should ONLY be uuid imo
-			//changed on 2/1/13 by Maria
-			if(p.getUUID().equals(this.uuid))// && p.getName().equals(this.name))
+
+			if(p.getUUID().equals(this.uuid))
 			{
 				return true;
 			}
