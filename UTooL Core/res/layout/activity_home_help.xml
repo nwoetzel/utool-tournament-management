@@ -34,7 +34,6 @@
                 android:layout_marginBottom="20dip" >
 
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -43,7 +42,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#FFF"/>
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="White tournaments are created by you."
@@ -57,7 +55,6 @@
                 android:layout_marginBottom="20dip" >
 
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -66,7 +63,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0FF"/>
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Blue tournaments are located on a remote host."
@@ -81,7 +77,6 @@
                 android:layout_marginBottom="20dip" >
 
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -90,7 +85,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#0F0"/>
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Green tournaments are tournaments on a remote host that you are connected to."
@@ -104,7 +98,6 @@
                 android:layout_marginBottom="20dip" >
 
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_gravity="center_vertical"
@@ -113,7 +106,6 @@
                     android:textAppearance="?android:attr/textAppearanceMedium"
                     android:textColor="#F00"/>
                 <TextView
-                    android:id="@+id/textView4"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="Red tournaments are finished tournaments that you have created."

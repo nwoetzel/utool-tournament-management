@@ -167,7 +167,6 @@
         android:layout_height="wrap_content"
         android:layout_alignBottom="@+id/pluginSelectionSpinner"
         android:layout_alignParentLeft="true"
-        android:layout_below="@+id/playerNameField"
         android:layout_toLeftOf="@+id/pluginSelectionSpinner"
         android:gravity="center"
         android:paddingBottom="7dp"
