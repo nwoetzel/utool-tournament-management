@@ -100,10 +100,6 @@ public class PluginServiceActivityHelper extends PluginCommonActivityHelper {
 	 */
 	private MConnection mConnection;
 	
-	private IUTooLCore mICore(){
-		return mICore;
-	}
-	
 	/**
 	 * The connection to the UTooLCore Service instance for this plugin
 	 */

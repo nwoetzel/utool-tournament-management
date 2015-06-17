@@ -1,6 +1,5 @@
 package utool.plugin.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 import utool.plugin.Player;

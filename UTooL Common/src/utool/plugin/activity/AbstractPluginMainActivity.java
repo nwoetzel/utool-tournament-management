@@ -1,17 +1,10 @@
 package utool.plugin.activity;
 
-import java.util.ArrayList;
 import java.util.List;
 import java.util.UUID;
 
-import utool.plugin.IUTooLCore;
 import utool.plugin.Player;
-import android.content.ComponentName;
-import android.content.Context;
-import android.content.Intent;
-import android.content.ServiceConnection;
 import android.os.Bundle;
-import android.os.IBinder;
 import android.os.RemoteException;
 
 /**
