@@ -1,21 +1,18 @@
 package utool.networking.wifidirect;
 
 import utool.core.R;
-import utool.core.R.layout;
 import utool.networking.WiFiDirectBroadcastReceiver;
 import android.annotation.TargetApi;
 import android.app.Activity;
 import android.content.BroadcastReceiver;
 import android.content.Context;
 import android.content.IntentFilter;
-import android.net.wifi.WifiManager;
 import android.net.wifi.p2p.WifiP2pConfig;
 import android.net.wifi.p2p.WifiP2pManager;
 import android.net.wifi.p2p.WifiP2pManager.ActionListener;
 import android.net.wifi.p2p.WifiP2pManager.Channel;
 import android.net.wifi.p2p.WifiP2pManager.ChannelListener;
 import android.os.Bundle;
-import android.os.Looper;
 import android.widget.Toast;
 
 @TargetApi(14)
