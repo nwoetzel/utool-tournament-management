@@ -27,8 +27,8 @@ public class TestSavablePlayerList extends TestCase{
 		
 		String actual = list.save();
 		
-		String expected = id1+"\nplayer name 1\nfalse\n-1\nfilepath 1\\";
-		expected += id2+"\nplayer name 2\ntrue\n-1\nfilepath 2";
+		String expected = id1+"\n==player name 1==\nfalse\n-1\nfilepath 1\\";
+		expected += id2+"\n==player name 2==\ntrue\n-1\nfilepath 2";
 		
 		Log.d("Expected", expected);
 		Log.d("Actual", actual);
@@ -42,8 +42,8 @@ public class TestSavablePlayerList extends TestCase{
 	public void testLoad(){
 		UUID id1 = UUID.randomUUID();
 		UUID id2 = UUID.randomUUID();
-		String input = id1+"\nplayer name 1\nfalse\n-1\nfilepath 1\\";
-		input += id2+"\nplayer name 2\ntrue\n-2\nfilepath 2";
+		String input = id1+"\n==player name 1==\nfalse\n-1\nfilepath 1\\";
+		input += id2+"\n==player name 2==\ntrue\n-2\nfilepath 2";
 		
 		SavablePlayerList list = new SavablePlayerList();
 		list = (SavablePlayerList) list.load(input);

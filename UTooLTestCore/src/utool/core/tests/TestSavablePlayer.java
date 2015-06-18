@@ -31,7 +31,7 @@ public class TestSavablePlayer extends TestCase{
 		String output = p.save();
 		
 		String expected = testID.toString()+"\n";
-		expected += testName+"\n";
+		expected += "=="+testName+"==\n";
 		expected += "false\n";
 		expected += seedValue+"\n";
 		expected += filepath;
@@ -45,7 +45,7 @@ public class TestSavablePlayer extends TestCase{
 		output = p.save();
 		
 		expected = testID.toString()+"\n";
-		expected += testName+"\n";
+		expected += "=="+testName+"==\n";
 		expected += "true\n";
 		expected += seedValue+"\n";
 		expected += filepath;
@@ -64,7 +64,7 @@ public class TestSavablePlayer extends TestCase{
 		String filepath = "testFilepath/derp/herp";
 		
 		String toLoad = testID.toString()+"\n";
-		toLoad += testName+"\n";
+		toLoad += "=="+testName+"==\n";
 		toLoad += "false\n";
 		toLoad += seedValue+"\n";
 		toLoad += filepath;
