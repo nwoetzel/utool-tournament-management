@@ -906,8 +906,12 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			// there is no intent
 			if( intent == null) {
 				Button button = (Button)v; 
-				button.setText("Need to install at least one UTool Tournament Plugin!");
-				button.setEnabled(false);
+				loadPluginList();
+				if( intentMap.size() == 0) {
+					button.setText("Need to install at least one UTool Tournament Plugin! Press to Reload Types..");
+				} else {
+					button.setText("Create Tournament");
+				}
 				
 				return;
 			}
