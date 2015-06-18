@@ -3,6 +3,7 @@
 	<name>UTooL_Core</name>
 	<comment></comment>
 	<projects>
+		<project>UTooL_Common</project>
 	</projects>
 	<buildSpec>
 		<buildCommand>
