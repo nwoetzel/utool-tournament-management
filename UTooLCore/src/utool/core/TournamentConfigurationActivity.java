@@ -197,9 +197,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		initializeListeners(); 
 
 		this.getWindow().setSoftInputMode(WindowManager.LayoutParams.SOFT_INPUT_STATE_ALWAYS_HIDDEN | WindowManager.LayoutParams.SOFT_INPUT_ADJUST_PAN);
-
-
-
 	}
 
 	@Override
@@ -369,7 +366,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		});
 		dialog.show();
 
-
 		StorageManager.saveBoolean("ConfigFirstUse", false, this);
 	}
 
@@ -465,7 +461,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			playerBeingEdited = position;
 			reloadList();
 		}
-
 	}
 
 	/**
@@ -599,15 +594,11 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 		//update the number of players label
 		TextView t = (TextView) this.findViewById(R.id.num_players);
-		if(selectedPlayers!=null)
-		{
+		if(selectedPlayers!=null) {
 			t.setText(selectedPlayers.size()+"");
-		}
-		else
-		{
+		} else {
 			t.setText("0");
 		}
-
 	}
 
 	/**
@@ -679,7 +670,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			public void onClick(View v) {
 				addPlayerButtonPressed();
 			}
-
 		});
 
 		ImageButton cameraButton = (ImageButton)findViewById(R.id.cameraButton);
@@ -782,38 +772,31 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			//look through recent
 			for(int i=0;i<this.recentPlayers.size();i++){
 				//determine equality ignoring case and leading/trailing whitespace
-				if(recentPlayers.get(i).getName().trim().equalsIgnoreCase(ret))
-				{
+				if(recentPlayers.get(i).getName().trim().equalsIgnoreCase(ret)) {
 					hasBeenFound=true;
 					break;
 				}
 			}
 
 			//look through added players
-			if(!hasBeenFound)
-			{
-				for(int i=0;i<this.addedPlayers.size();i++){
+			if(!hasBeenFound) {
+				for(int i=0;i<this.addedPlayers.size();i++) {
 					//determine equality ignoring case and leading/trailing whitespace
-					if(addedPlayers.get(i).getName().trim().equalsIgnoreCase(ret))
-					{
+					if(addedPlayers.get(i).getName().trim().equalsIgnoreCase(ret)) {
 						hasBeenFound=true;
 						break;
 					}
 				}
 			}		
-			if(!hasBeenFound)
-			{
+			if(!hasBeenFound) {
 				//name wasn't found therefore its safe to return it
 				inList=false;
-			}
-			else
-			{
+			} else {
 				//increment index and stay in while loop
 				index++;
 				ret = "Player "+index;
 			}
 		}
-
 
 		return ret;
 	}
@@ -837,8 +820,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		int pluginIndex = -1;
 
 		//add plugins to list and map their index to a new intent
-		for(int i = 0 ; i < list.size() ; i++)
-		{
+		for(int i = 0 ; i < list.size() ; i++) {
 			ResolveInfo info = list.get( i );
 			String plugin = info.activityInfo.applicationInfo.loadLabel(getPackageManager()).toString();
 			discoveredPlugins.add(plugin);
@@ -907,7 +889,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		public SaveButtonListener(EditText name, Spinner plugin){
 			tournamentName = name;
 			pluginSelector = plugin;
-
 		}
 
 		@Override
@@ -919,7 +900,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				name = tName.getHint().toString();
 			}
 
-
+			// find the selected plugin
 			Intent intent = intentMap.get(pluginSelector.getSelectedItemPosition());
 
 			//apply changes to configuration
@@ -961,10 +942,7 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 			finish();
 		}
-
 	}
-
-
 
 	/**
 	 * This class is responsible for setting up the list of players to display in the list view
@@ -1088,16 +1066,12 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 					//update the number of players label
 					TextView t = (TextView) findViewById(R.id.num_players);
-					if(selectedPlayers!=null)
-					{
+					if(selectedPlayers!=null) {
 						t.setText(selectedPlayers.size()+"");
-					}
-					else
-					{
+					} else {
 						t.setText("0");
 					}
 				}
-
 			});
 
 			//if not the host or deviceless, then they're connected
@@ -1108,7 +1082,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				ImageView connectIcon = (ImageView)convertView.findViewById(R.id.connectionIcon);
 				connectIcon.setBackgroundResource(R.drawable.wireless_connection_icon);
 			}
-
 
 			return convertView;
 		}
@@ -1122,7 +1095,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		 */
 		private View editLineInitialize(final int position, View convertView, ViewGroup parent){
 			LayoutInflater inflater = getLayoutInflater();
-
 
 			ImageView portrait;
 			if (convertView == null){
@@ -1139,7 +1111,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 				convertView = inflater.inflate(R.layout.row_player_edit, parent, false);
 				portrait = (ImageView)convertView.findViewById(R.id.playerPortrait);
 			}
-
 
 			//Async load the portrait
 			if (players.get(position).hasPortraitChanged()){
@@ -1163,13 +1134,11 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			edit.setText(p.getName());
 
 			portrait.setOnClickListener(new OnClickListener(){
-
 				@Override
 				public void onClick(View v) {
 					DeletePortraitFragment f = new DeletePortraitFragment();
 					f.show(getSupportFragmentManager(), "delete portrait");
 				}
-
 			});
 
 			ImageButton saveButton = (ImageButton)convertView.findViewById(R.id.saveButton);
@@ -1224,7 +1193,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 						Log.e("TournamentConfigActivity", "Unable to access folder: /utool");
 					}
 				}
-
 			});
 
 			//setup camera button
@@ -1259,16 +1227,12 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 		public void onClick(View v) {
 			//start an activity to retrieve a gallery photo from the file system
 			Intent i = new Intent(Intent.ACTION_PICK,android.provider.MediaStore.Images.Media.EXTERNAL_CONTENT_URI);
-			if(isEdit)
-			{
+			if(isEdit) {
 				startActivityForResult(i, EDIT_GALLERY_REQUEST_CODE);
-			}
-			else
-			{
+			} else {
 				startActivityForResult(i, GALLERY_REQUEST_CODE);
 			}
 		}
-
 	}
 
 	/**
@@ -1299,7 +1263,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 					players.add(profile);
 					players.addAll(otherProfiles);
 
-
 					//save the player list
 					StorageManager.saveSavable(SAVED_PLAYER_LIST, recentPlayers, TournamentConfigurationActivity.this);
 
@@ -1314,20 +1277,17 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 						}
 					}
 
-
 					EditText playerEdit = (EditText)findViewById(R.id.playerNameField);
 					//Make the player hint change based on the number of players
 					playerEdit.setHint(getNextPlayerNameHint());
 
 					reloadList();
 				}
-
 			});
 
 			return builder.create();
 		}
 	}
-
 
 	/**
 	 * Responsible for letting the user remove portraits from the edit line
@@ -1365,7 +1325,6 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 
 					reloadList();
 				}
-
 			});
 
 			return builder.create();
