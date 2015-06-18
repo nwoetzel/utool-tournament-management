@@ -903,6 +903,15 @@ public class TournamentConfigurationActivity extends FragmentActivity{
 			// find the selected plugin
 			Intent intent = intentMap.get(pluginSelector.getSelectedItemPosition());
 
+			// there is no intent
+			if( intent == null) {
+				Button button = (Button)v; 
+				button.setText("Need to install at least one UTool Tournament Plugin!");
+				button.setEnabled(false);
+				
+				return;
+			}
+
 			//apply changes to configuration
 			configuration.setPluginName(intent.getComponent().getClassName());
 			configuration.setPluginPackage(intent.getComponent().getPackageName());
